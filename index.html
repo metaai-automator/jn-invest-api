@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JN Invest — Gestão Patrimonial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F8FAFC; --surface:#FFFFFF; --surface2:#F1F5F9; --elev:#FFFFFF;
+    --border:#E2E8F0; --border2:#CBD5E1;
+    --text:#1E293B; --muted:#64748B; --faint:#94A3B8;
+    --navy:#0F172A; --navy2:#1E293B;
+    --gold:#D4AF37; --gold-soft:#E1C158; --gold-deep:#C9A227;
+    --success:#16A34A; --danger:#DC2626; --info:#2563EB;
+    --shadow:0 8px 30px rgba(15,23,42,.08);
+  }
+  [data-theme="dark"]{
+    --bg:#0B1120; --surface:#0F172A; --surface2:#1E293B; --elev:#1E293B;
+    --border:#1E293B; --border2:#334155;
+    --text:#F1F5F9; --muted:#94A3B8; --faint:#64748B;
+    --navy:#0F172A; --navy2:#1E293B;
+    --gold:#D4AF37; --gold-soft:#E1C158; --gold-deep:#C9A227;
+    --success:#22C55E; --danger:#F87171; --info:#3B82F6;
+    --shadow:0 10px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Manrope','Inter',system-ui,sans-serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; transition:background .3s,color .3s;}
+  .serif{font-family:'Manrope','Inter',sans-serif;}
+  button{font-family:inherit; cursor:pointer; color:inherit;}
+  .hidden{display:none !important;}
+  ::selection{background:var(--gold); color:var(--navy);}
+
+  /* ---- LOGO ---- */
+  .logo-badge{display:inline-flex; align-items:center; justify-content:center; background:var(--navy); color:var(--gold); font-family:'Manrope',sans-serif; font-weight:700; border:1px solid var(--gold); letter-spacing:.01em; flex-shrink:0;}
+  .wordmark{font-family:'Manrope','Inter',sans-serif; font-weight:700; letter-spacing:.005em;}
+  .wordmark b{color:var(--gold); font-weight:700;}
+
+  /* ---- LOGIN ---- */
+  #login{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
+  .login-card{background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:44px 38px; width:380px; box-shadow:var(--shadow);}
+  .login-brand{display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:28px;}
+  .login-brand .wordmark{font-size:28px; color:var(--text);}
+  .tagline{font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:var(--gold); margin-top:-4px;}
+  .login-card h1{font-family:'Manrope','Inter',sans-serif; font-weight:500; font-size:24px; text-align:center; margin-bottom:6px;}
+  .login-card p.sub{font-size:13px; color:var(--muted); text-align:center; margin-bottom:26px;}
+  label{font-size:12px; letter-spacing:.04em; color:var(--muted); display:block; margin-bottom:7px; text-transform:uppercase;}
+  input,select{width:100%; height:44px; background:var(--surface2); border:1px solid var(--border); border-radius:11px; padding:0 14px; font-size:14px; color:var(--text); outline:none; transition:border .15s,box-shadow .15s;}
+  input{margin-bottom:18px;}
+  input:focus,select:focus{border-color:var(--gold); box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 22%,transparent);}
+  .btn-primary{width:100%; height:48px; background:var(--gold); color:var(--navy); border:none; border-radius:12px; font-size:14px; font-weight:700; letter-spacing:.01em; transition:background .15s,transform .1s;}
+  .btn-primary:hover{background:var(--gold-deep);} .btn-primary:active{transform:scale(.99);}
+  .hint{font-size:12px; color:var(--faint); text-align:center; margin-top:18px;}
+
+  /* ---- APP ---- */
+  #app{display:flex; min-height:100vh;}
+  .sidebar{width:228px; background:var(--navy); border-right:1px solid var(--navy); padding:24px 16px; display:flex; flex-direction:column; gap:3px;}
+  .sb-brand{display:flex; align-items:center; gap:11px; padding:0 8px 26px;}
+  .sb-brand .wordmark{font-size:18px; color:#fff;}
+  .navlabel{font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#64748B; padding:14px 12px 6px;}
+  .navitem{display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:10px; font-size:14px; color:#94A3B8; border:none; background:transparent; width:100%; text-align:left; transition:background .15s,color .15s; position:relative;}
+  .navitem:hover{background:rgba(255,255,255,.06); color:#fff;}
+  .navitem.active{background:rgba(212,175,55,.14); color:var(--gold); font-weight:600;}
+  .navitem.active::before{content:''; position:absolute; left:0; top:10px; bottom:10px; width:3px; background:var(--gold); border-radius:0 3px 3px 0;}
+  .navitem .ic{font-size:18px; width:22px; text-align:center; opacity:.9;}
+  .spacer{margin-top:auto;}
+
+  .main{flex:1; padding:30px 38px; overflow:auto; min-width:0;}
+  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:30px;}
+  .topbar h2{font-family:'Manrope','Inter',sans-serif; font-weight:700; font-size:28px; line-height:1; color:var(--text);}
+  .topbar .sub{font-size:12.5px; color:var(--muted); margin-top:5px;}
+  .topright{display:flex; align-items:center; gap:14px;}
+  .iconbtn{width:42px; height:42px; border-radius:12px; border:1px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center; transition:background .15s,border .15s;}
+  .iconbtn:hover{background:var(--surface2); border-color:var(--border2);}
+  .iconbtn svg{width:19px; height:19px; stroke:var(--text); fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round;}
+  .avatar{width:42px; height:42px; border-radius:50%; background:var(--navy); border:1px solid var(--gold); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700;}
+
+  /* ---- HERO ---- */
+  .hero{background:var(--navy); border:1px solid var(--navy); border-radius:18px; padding:28px 30px; margin-bottom:18px; position:relative; overflow:hidden;}
+  .hero::after{content:''; position:absolute; top:0; right:0; width:240px; height:100%; background:radial-gradient(circle at 92% 18%, rgba(212,175,55,.16), transparent 62%); pointer-events:none;}
+  .hero .lbl{font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;}
+  .hero .big{font-family:'Manrope','Inter',sans-serif; font-weight:700; font-size:52px; line-height:1; letter-spacing:-.02em; color:#fff;}
+  .hero .meta{display:flex; gap:24px; margin-top:16px; flex-wrap:wrap;}
+  .hero .meta span{font-size:13px; color:#94A3B8;}
+  .hero .meta b{color:#F1F5F9; font-weight:600;}
+
+  /* ---- CARDS ---- */
+  .cards{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:18px;}
+  @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr);}}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:18px 20px;}
+  .card .lbl{font-size:12px; letter-spacing:.03em; color:var(--muted); margin-bottom:9px; display:flex; align-items:center; gap:7px;}
+  .card .lbl .ci{font-size:15px; color:var(--gold);}
+  .card .val{font-family:'Manrope','Inter',sans-serif; font-size:30px; font-weight:600; line-height:1;}
+  .card .delta{font-size:12.5px; margin-top:7px;}
+  .up{color:var(--success);} .down{color:var(--danger);}
+
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;}
+  @media(max-width:980px){.row2{grid-template-columns:1fr;}}
+  .panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px;}
+  .panel h3{font-family:'Manrope','Inter',sans-serif; font-weight:600; font-size:20px; margin-bottom:18px;}
+
+  .donut-wrap{display:flex; align-items:center; gap:22px;}
+  .donut-center{position:relative; width:170px; height:170px; flex-shrink:0;}
+  .donut-center .ctxt{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .donut-center .ctxt .s{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em;}
+  .donut-center .ctxt .v{font-family:'Manrope','Inter',sans-serif; font-size:24px; font-weight:600;}
+  .legend{display:flex; flex-direction:column; gap:9px; font-size:13px; flex:1;}
+  .legend .li{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .legend .li .name{display:flex; align-items:center; gap:9px; color:var(--muted);}
+  .dot{width:10px; height:10px; border-radius:3px; flex-shrink:0;}
+  .legend .li .pct{font-weight:500; color:var(--text);}
+
+  .bars{display:flex; align-items:flex-end; gap:8px; height:170px; padding-top:10px;}
+  .bars .b{flex:1; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:8px;}
+  .bars .b .fill{width:100%; background:var(--gold); border-radius:4px 4px 0 0; min-height:3px; transition:height .4s;}
+  .bars .b .m{font-size:10px; color:var(--faint);}
+
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  th{font-weight:500; color:var(--muted); text-align:right; padding:11px 8px; border-bottom:1px solid var(--border); font-size:11px; letter-spacing:.05em; text-transform:uppercase;}
+  th:first-child{text-align:left;}
+  td{padding:13px 8px; border-bottom:1px solid var(--border); text-align:right;}
+  td:first-child{text-align:left; font-weight:600;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr{transition:background .12s;} tbody tr:hover{background:var(--surface2);}
+  .tk{display:flex; flex-direction:column;} .tk small{font-weight:400; color:var(--faint); font-size:11px;}
+
+  .toolbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:14px; flex-wrap:wrap;}
+  .btn{height:42px; padding:0 18px; border:1px solid var(--border2); background:var(--surface); border-radius:12px; font-size:13px; font-weight:500; display:inline-flex; align-items:center; gap:8px; transition:background .15s,border .15s;}
+  .btn:hover{background:var(--surface2);}
+  .btn.gold{background:var(--gold); color:var(--navy); border:none; font-weight:700;}
+  .btn.gold:hover{background:var(--gold-deep);}
+
+  .formrow{display:grid; grid-template-columns:repeat(5,1fr) auto; gap:12px; align-items:end; background:var(--surface2); padding:20px; border-radius:14px; margin-bottom:18px;}
+  .formrow label{margin-bottom:6px;}
+  .formrow input,.formrow select{height:42px; margin:0;}
+  .formrow .btn{height:42px;}
+  .importbar{display:flex; align-items:center; justify-content:space-between; gap:18px; margin-bottom:18px;}
+  .importbar p{color:var(--muted); font-size:13px; margin-top:5px; max-width:520px; line-height:1.5;}
+  .empty{text-align:center; color:var(--muted); padding:30px;}
+  .pill{font-size:11px; padding:3px 9px; border-radius:20px; background:var(--surface2); border:1px solid var(--border); color:var(--muted);}
+  .search-results{position:absolute; left:0; right:0; top:48px; background:var(--elev); border:1px solid var(--border2); border-radius:12px; z-index:20; overflow:hidden; box-shadow:var(--shadow);}
+  .sr-item{display:flex; align-items:center; gap:12px; padding:11px 14px; cursor:pointer; border-bottom:1px solid var(--border); transition:background .12s;}
+  .sr-item:last-child{border-bottom:none;}
+  .sr-item:hover{background:var(--surface2);}
+  .sr-item img{width:28px; height:28px; border-radius:7px; background:var(--surface2); object-fit:contain;}
+  .sr-item .nm{flex:1; min-width:0;} .sr-item .nm b{font-weight:600; font-size:14px;} .sr-item .nm small{display:block; color:var(--faint); font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .sr-item .pr{font-family:'Manrope','Inter',sans-serif; font-size:18px; font-weight:600;}
+  .sr-hint{padding:12px 14px; color:var(--faint); font-size:13px;}
+  .confirm-add{display:flex; align-items:end; gap:14px; margin-top:16px; background:var(--surface2); padding:16px; border-radius:12px; flex-wrap:wrap;}
+  .confirm-add .sel{display:flex; align-items:center; gap:10px; min-width:160px;}
+  .confirm-add .sel img{width:34px; height:34px; border-radius:8px; background:var(--surface);}
+
+  /* ---- LANDING (página de vendas) ---- */
+  .lp-nav{display:flex; align-items:center; justify-content:space-between; padding:16px 7%; position:sticky; top:0; background:color-mix(in srgb,var(--bg) 88%,transparent); backdrop-filter:blur(10px); z-index:30; border-bottom:1px solid var(--border);}
+  .lp-brand{display:flex; align-items:center; gap:11px;}
+  .lp-brand .wordmark{font-size:18px; color:var(--text);}
+  .lp-links{display:flex; align-items:center; gap:6px;}
+  .lp-links a{font-size:14px; color:var(--muted); cursor:pointer; padding:8px 12px; border-radius:8px;}
+  .lp-links a:hover{color:var(--text);}
+  .lp-hero{background:var(--navy); padding:84px 7% 92px; text-align:center; position:relative; overflow:hidden;}
+  .lp-hero::after{content:''; position:absolute; inset:0; background:radial-gradient(circle at 72% 8%,rgba(212,175,55,.16),transparent 55%); pointer-events:none;}
+  .lp-hero-in{max-width:800px; margin:0 auto; position:relative;}
+  .lp-badge{display:inline-block; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); border:1px solid color-mix(in srgb,var(--gold) 45%,transparent); border-radius:30px; padding:6px 16px; margin-bottom:26px;}
+  .lp-hero h1{font-size:46px; font-weight:700; line-height:1.07; color:#fff; letter-spacing:-.02em; margin-bottom:20px;}
+  .lp-hero p{font-size:18px; color:#cbd5e1; line-height:1.6; max-width:640px; margin:0 auto 34px;}
+  .lp-cta{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+  .lp-cta .btn{height:52px; padding:0 26px; font-size:15px; background:transparent; color:#fff; border-color:rgba(255,255,255,.28);}
+  .lp-cta .btn:hover{background:rgba(255,255,255,.08);}
+  .lp-cta .btn-primary{height:52px; width:auto; padding:0 30px;}
+  .lp-trust{margin-top:32px; font-size:12.5px; letter-spacing:.1em; color:#64748b; text-transform:uppercase;}
+  .lp-section{max-width:1040px; margin:0 auto; padding:72px 7%;}
+  .lp-section h2{font-size:31px; font-weight:700; text-align:center; margin-bottom:12px; color:var(--text);}
+  .lp-sub{text-align:center; color:var(--muted); font-size:16px; margin:0 auto 46px; max-width:580px;}
+  .lp-features{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  @media(max-width:820px){.lp-features{grid-template-columns:1fr;}}
+  .lp-feat{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:26px;}
+  .lp-feat .fi{width:44px; height:44px; border-radius:11px; background:var(--surface2); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:21px; margin-bottom:15px;}
+  .lp-feat h3{font-size:17px; font-weight:600; margin-bottom:8px;}
+  .lp-feat p{font-size:14px; color:var(--muted); line-height:1.6;}
+  .lp-prices{display:grid; grid-template-columns:repeat(2,1fr); gap:20px; max-width:740px; margin:0 auto;}
+  @media(max-width:700px){.lp-prices{grid-template-columns:1fr;}}
+  .lp-price{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:30px; position:relative;}
+  .lp-price.feat{border:2px solid var(--gold);}
+  .lp-price .ptag{position:absolute; top:-12px; left:30px; background:var(--gold); color:var(--navy); font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; text-transform:uppercase; letter-spacing:.05em;}
+  .lp-price .pname{font-size:15px; font-weight:600; color:var(--muted);}
+  .lp-price .pval{font-size:38px; font-weight:700; margin:10px 0 2px;}
+  .lp-price .pval small{font-size:15px; font-weight:500; color:var(--muted);}
+  .lp-price ul{list-style:none; margin:20px 0 24px;}
+  .lp-price li{font-size:14px; color:var(--text); padding:7px 0; display:flex; gap:9px; align-items:flex-start;}
+  .lp-price li .ck{color:var(--success); font-weight:700;}
+  .lp-final{background:var(--navy); text-align:center; padding:74px 7%;}
+  .lp-final h2{color:#fff; font-size:31px; font-weight:700; margin-bottom:10px;}
+  .lp-final p{color:#cbd5e1; margin-bottom:26px;}
+  .lp-footer{text-align:center; padding:30px; color:var(--faint); font-size:13px; border-top:1px solid var(--border);}
+
+  /* ---- AUTH (cadastro/login) ---- */
+  .auth-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
+  .btn-google{width:100%; height:48px; background:var(--surface); border:1px solid var(--border2); border-radius:12px; font-size:14px; font-weight:600; color:var(--text); display:flex; align-items:center; justify-content:center; gap:10px; cursor:pointer; margin-bottom:18px; transition:background .15s;}
+  .btn-google:hover{background:var(--surface2);}
+  .auth-div{display:flex; align-items:center; gap:12px; color:var(--faint); font-size:12px; margin:4px 0 18px; text-transform:uppercase; letter-spacing:.05em;}
+  .auth-div::before,.auth-div::after{content:''; flex:1; height:1px; background:var(--border);}
+  .auth-foot{text-align:center; font-size:13px; color:var(--muted); margin-top:20px;}
+  .auth-foot a{color:var(--gold); cursor:pointer; font-weight:600;}
+  .auth-back{display:block; text-align:center; margin-top:14px; color:var(--faint); font-size:13px; cursor:pointer;}
+  .auth-back:hover{color:var(--muted);}
+</style>
+</head>
+<body>
+
+<!-- ===== LANDING (página de vendas) ===== -->
+<div id="landing">
+  <header class="lp-nav">
+    <div class="lp-brand"><div class="logo-badge" style="width:34px;height:34px;font-size:14px;border-radius:9px">JN</div><span class="wordmark">JN <b>Invest</b></span></div>
+    <nav class="lp-links">
+      <a onclick="document.getElementById('lp-recursos').scrollIntoView({behavior:'smooth'})">Recursos</a>
+      <a onclick="document.getElementById('lp-precos').scrollIntoView({behavior:'smooth'})">Preços</a>
+      <button class="btn" style="height:40px" onclick="showLogin()">Entrar</button>
+      <button class="btn gold" style="height:40px" onclick="showSignup()">Criar conta</button>
+    </nav>
+  </header>
+
+  <section class="lp-hero">
+    <div class="lp-hero-in">
+      <div class="lp-badge">Gestão patrimonial internacional</div>
+      <h1>Seu patrimônio, sob controle — em qualquer lugar do mundo.</h1>
+      <p>A plataforma do brasileiro que vive na Europa para acompanhar a B3, os investimentos no exterior e as criptos num só lugar — com a precisão de um private bank.</p>
+      <div class="lp-cta">
+        <button class="btn-primary" onclick="showSignup()">Criar conta grátis</button>
+        <button class="btn" onclick="showLogin()">Ver demonstração</button>
+      </div>
+      <div class="lp-trust">B3 · Exterior · Cripto · Proventos · Imposto de renda</div>
+    </div>
+  </section>
+
+  <section class="lp-section" id="lp-recursos">
+    <h2>Tudo que você precisa para decidir com clareza</h2>
+    <p class="lp-sub">Da importação automática da B3 à análise fundamentalista — dados ao vivo, numa interface feita para investidores.</p>
+    <div class="lp-features">
+      <div class="lp-feat"><div class="fi">◆</div><h3>Consolidação total</h3><p>B3, ações no exterior, REITs e criptomoedas reunidos num único painel de patrimônio.</p></div>
+      <div class="lp-feat"><div class="fi">⬆</div><h3>Importação automática</h3><p>Suba o extrato da B3 e a carteira se monta sozinha — preço médio e proventos calculados.</p></div>
+      <div class="lp-feat"><div class="fi">◷</div><h3>Análise fundamentalista</h3><p>P/VP, Dividend Yield, ROE, margens e mais — ao vivo, para escolher os melhores ativos.</p></div>
+      <div class="lp-feat"><div class="fi">❖</div><h3>Proventos & renda passiva</h3><p>Acompanhe dividendos e JCP mês a mês e projete sua renda passiva crescente.</p></div>
+      <div class="lp-feat"><div class="fi">↻</div><h3>Cotações ao vivo</h3><p>Preços, variação do dia e do mês atualizados em tempo real, do Brasil ao exterior.</p></div>
+      <div class="lp-feat"><div class="fi">▤</div><h3>Imposto de renda</h3><p>Day trade, swing trade e proventos já separados — pronto para a sua declaração.</p></div>
+    </div>
+  </section>
+
+  <section class="lp-section" id="lp-precos" style="padding-top:20px">
+    <h2>Planos simples</h2>
+    <p class="lp-sub">Comece de graça. Faça upgrade quando quiser o pacote completo.</p>
+    <div class="lp-prices">
+      <div class="lp-price">
+        <div class="pname">Gratuito</div>
+        <div class="pval">R$ 0<small>/mês</small></div>
+        <ul>
+          <li><span class="ck">✓</span> Carteira Brasil (B3)</li>
+          <li><span class="ck">✓</span> Importação do extrato da B3</li>
+          <li><span class="ck">✓</span> Proventos e cotações ao vivo</li>
+          <li><span class="ck">✓</span> Dashboard consolidado</li>
+        </ul>
+        <button class="btn" style="width:100%" onclick="showSignup()">Começar grátis</button>
+      </div>
+      <div class="lp-price feat">
+        <div class="ptag">Mais popular</div>
+        <div class="pname">Premium</div>
+        <div class="pval">R$ 29,90<small>/mês</small></div>
+        <ul>
+          <li><span class="ck">✓</span> Tudo do plano gratuito</li>
+          <li><span class="ck">✓</span> Exterior e criptomoedas</li>
+          <li><span class="ck">✓</span> Análise fundamentalista completa</li>
+          <li><span class="ck">✓</span> Módulo de Imposto de Renda</li>
+          <li><span class="ck">✓</span> Suporte prioritário</li>
+        </ul>
+        <button class="btn gold" style="width:100%" onclick="showSignup()">Assinar Premium</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-final">
+    <h2>Comece a organizar seu patrimônio hoje</h2>
+    <p>Leva menos de 2 minutos para criar sua conta.</p>
+    <button class="btn-primary" style="width:auto;padding:0 32px;height:52px" onclick="showSignup()">Criar conta grátis</button>
+  </section>
+  <footer class="lp-footer">JN Invest · Gestão patrimonial para brasileiros na Europa · protótipo</footer>
+</div>
+
+<!-- ===== CADASTRO ===== -->
+<div id="signup" class="hidden auth-wrap">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="logo-badge" style="width:50px;height:50px;font-size:19px;border-radius:13px">JN</div>
+      <div class="wordmark" style="font-size:24px">JN <b>Invest</b></div>
+    </div>
+    <h1>Criar sua conta</h1>
+    <p class="sub">Comece a acompanhar seu patrimônio agora.</p>
+    <button class="btn-google" onclick="entrar()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continuar com Google</button>
+    <div class="auth-div">ou com e-mail</div>
+    <label>Nome</label>
+    <input type="text" placeholder="Seu nome">
+    <label>E-mail</label>
+    <input type="email" placeholder="voce@email.com">
+    <label>Senha</label>
+    <input type="password" placeholder="Crie uma senha">
+    <button class="btn-primary" onclick="entrar()">Criar conta</button>
+    <p class="auth-foot">Já tem conta? <a onclick="showLogin()">Entrar</a></p>
+    <a class="auth-back" onclick="showLanding()">← Voltar para o início</a>
+  </div>
+</div>
+
+<!-- ===== LOGIN ===== -->
+<div id="login" class="hidden auth-wrap">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="logo-badge" style="width:56px; height:56px; font-size:21px; border-radius:14px;">JN</div>
+      <div class="wordmark" style="font-size:28px;">JN <b>Invest</b></div>
+      <div class="tagline">gestão patrimonial</div>
+    </div>
+    <h1>Acesse sua carteira</h1>
+    <p class="sub">Gestão patrimonial para brasileiros na Europa.</p>
+    <button class="btn-google" onclick="entrar()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Entrar com Google</button>
+    <div class="auth-div">ou com e-mail</div>
+    <label>E-mail</label>
+    <input id="email" type="email" value="cliente@jninvest.com">
+    <label>Senha</label>
+    <input id="senha" type="password" value="••••••">
+    <button class="btn-primary" onclick="entrar()">Entrar</button>
+    <p class="auth-foot">Não tem conta? <a onclick="showSignup()">Criar conta</a></p>
+    <a class="auth-back" onclick="showLanding()">← Voltar para o início</a>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app" class="hidden">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="logo-badge" style="width:36px; height:36px; font-size:14px; border-radius:10px;">JN</div>
+      <div class="wordmark">JN <b>Invest</b></div>
+    </div>
+    <div class="navlabel">Visão geral</div>
+    <button class="navitem active" data-view="dash" onclick="nav('dash')"><span class="ic">◆</span>Dashboard</button>
+    <div class="navlabel">Carteiras</div>
+    <button class="navitem" data-view="br" onclick="nav('br')"><span class="ic">▣</span>Brasil</button>
+    <button class="navitem" data-view="ext" onclick="nav('ext')"><span class="ic">◉</span>Exterior</button>
+    <button class="navitem" data-view="cripto" onclick="nav('cripto')"><span class="ic">⬡</span>Cripto</button>
+    <div class="navlabel">Renda</div>
+    <button class="navitem" data-view="prov" onclick="nav('prov')"><span class="ic">❖</span>Proventos</button>
+    <div class="navlabel">Registros</div>
+    <button class="navitem" data-view="mov" onclick="nav('mov')"><span class="ic">≣</span>Movimentações</button>
+    <div class="navlabel">Ferramentas</div>
+    <button class="navitem" data-view="analise" onclick="nav('analise')"><span class="ic">◷</span>Análise de ativos</button>
+    <div class="spacer"></div>
+    <button class="navitem" onclick="sair()"><span class="ic">⎋</span>Sair</button>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h2 id="viewTitle">Dashboard</h2>
+        <div class="sub" id="topsub">Bom te ver de volta</div>
+      </div>
+      <div class="topright">
+        <button class="iconbtn" id="refreshBtn" onclick="atualizarCotacoes(false)" aria-label="Atualizar cotações" title="Atualizar cotações ao vivo"></button>
+        <button class="iconbtn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema"></button>
+        <div class="avatar">JN</div>
+      </div>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const fmt = n => 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt0 = n => 'R$ ' + n.toLocaleString('pt-BR',{maximumFractionDigits:0});
+
+/* ===== TOKEN CENTRAL DA PLATAFORMA =====
+   No produto real isto fica no SERVIDOR (invisível ao cliente).
+   Aqui no protótipo, basta colar UMA vez o token grátis da brapi.dev
+   entre as aspas abaixo, e TODOS os ativos passam a funcionar pra
+   qualquer pessoa que abrir — sem o usuário configurar nada.        */
+const BRAPI_TOKEN = 'un7wGaxScsYoJVY4bTmKPm';
+function brapiToken(){ return BRAPI_TOKEN || localStorage.getItem('aurum_brapi_token') || ''; }
+
+/* Servidor de fundamentos. Quando o site roda no Railway (http/https), usa o
+   mesmo endereço (relativo). Quando aberto local (file://), usa a URL do Railway. */
+const JN_API = location.protocol.startsWith('http') ? '' : 'https://jn-invest-api-production.up.railway.app';
+
+const ICON_MOON='<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+const ICON_SUN='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const ICON_REFRESH='<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>';
+function applyTheme(t){ document.documentElement.setAttribute('data-theme',t); const b=document.getElementById('themeBtn'); if(b) b.innerHTML = t==='dark'?ICON_SUN:ICON_MOON; const rb=document.getElementById('refreshBtn'); if(rb && !rb.innerHTML) rb.innerHTML=ICON_REFRESH; }
+function toggleTheme(){ const cur=document.documentElement.getAttribute('data-theme')||'light'; const n=cur==='dark'?'light':'dark'; localStorage.setItem('jn_theme',n); applyTheme(n); }
+applyTheme(localStorage.getItem('jn_theme')||'light');
+
+let ativos = JSON.parse(localStorage.getItem('investpro_ativos_v2') || 'null') || [];
+const save = () => localStorage.setItem('investpro_ativos_v2', JSON.stringify(ativos));
+let proventos = JSON.parse(localStorage.getItem('investpro_prov_v2') || 'null') || [0,0,0,0,0,0,0,0,0,0,0,0];
+const saveProv = () => localStorage.setItem('investpro_prov_v2', JSON.stringify(proventos));
+let movimentacoes = JSON.parse(localStorage.getItem('aurum_mov') || 'null') || [];
+const saveMov = () => localStorage.setItem('aurum_mov', JSON.stringify(movimentacoes));
+let cryptos = JSON.parse(localStorage.getItem('aurum_cripto') || 'null') || [];
+const saveCripto = () => localStorage.setItem('aurum_cripto', JSON.stringify(cryptos));
+let exterior = JSON.parse(localStorage.getItem('aurum_ext') || 'null') || [];
+const saveExt = () => localStorage.setItem('aurum_ext', JSON.stringify(exterior));
+let fxUSD = parseFloat(localStorage.getItem('aurum_fx')) || 0;
+
+const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const coresClasse = {'Ações':'#0F172A','FIIs':'#1E3A8A','Renda Fixa':'#2563EB','Stocks':'#475569','REITs':'#64748B','Cripto':'#94A3B8','BDRs':'#334155','ETFs':'#3B82F6'};
+
+function show(id){ ['landing','signup','login','app'].forEach(x=>document.getElementById(x).classList.toggle('hidden', x!==id)); window.scrollTo(0,0); }
+function showLanding(){ show('landing'); }
+function showLogin(){ show('login'); }
+function showSignup(){ show('signup'); }
+function entrar(){ show('app'); applyTheme(document.documentElement.getAttribute('data-theme')); nav('dash'); renderSub(); if(ativos.length||cryptos.length||exterior.length) atualizarTudo(true); }
+function sair(){ show('landing'); }
+
+function renderSub(){
+  const el=document.getElementById('topsub'); if(!el) return;
+  const t=localStorage.getItem('aurum_quote_time');
+  el.textContent = t ? ('Cotações ao vivo · atualizado às '+new Date(+t).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})) : 'Bom te ver de volta';
+}
+
+async function cotarUmBR(ticker){
+  const token=brapiToken();
+  const url='https://brapi.dev/api/quote/'+encodeURIComponent(ticker)+'?range=1mo&interval=1d'+(token?('&token='+token):'');
+  const res=await fetch(url); const data=await res.json();
+  if(!res.ok || !data.results || !data.results[0]) throw new Error(data.message||('HTTP '+res.status));
+  const r=data.results[0]; const o={preco:r.regularMarketPrice, varDia:r.regularMarketChangePercent||0, varMes:null};
+  const h=r.historicalDataPrice; if(h&&h.length>1&&h[0].close) o.varMes=(r.regularMarketPrice-h[0].close)/h[0].close*100;
+  return o;
+}
+async function atualizarBR(){
+  const tickers=[...new Set(ativos.filter(a=>a.classe!=='Renda Fixa').map(a=>a.ticker))];
+  if(!tickers.length) return 0;
+  const res=await Promise.allSettled(tickers.map(t=>cotarUmBR(t)));
+  const map={}; res.forEach((rr,i)=>{ if(rr.status==='fulfilled'&&rr.value.preco) map[tickers[i]]=rr.value; });
+  let n=0; ativos.forEach(a=>{ if(map[a.ticker]){ a.preco=map[a.ticker].preco; a.varDia=map[a.ticker].varDia; a.varMes=map[a.ticker].varMes; n++; } }); save();
+  if(!n && tickers.length) throw new Error('cotações indisponíveis (limite do plano?)');
+  return n;
+}
+async function atualizarCripto(){
+  if(!cryptos.length) return 0;
+  const ids=[...new Set(cryptos.map(c=>c.id))].join(',');
+  const res=await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=brl&ids='+encodeURIComponent(ids)+'&price_change_percentage=24h');
+  const data=await res.json(); if(!Array.isArray(data)) throw new Error('cripto indisponível');
+  const map={}; data.forEach(d=>map[d.id]={preco:d.current_price, var24:d.price_change_percentage_24h, img:d.image});
+  let n=0; cryptos.forEach(c=>{ if(map[c.id]){ c.preco=map[c.id].preco; c.var24=map[c.id].var24; c.img=map[c.id].img||c.img; n++; } }); saveCripto(); return n;
+}
+async function atualizarFX(){
+  const res=await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+  const d=await res.json(); if(d.USDBRL){ fxUSD=parseFloat(d.USDBRL.bid); fxVar=parseFloat(d.USDBRL.pctChange); localStorage.setItem('aurum_fx',fxUSD); }
+}
+let fxVar=0;
+async function atualizarTudo(silent){
+  const rb=document.getElementById('refreshBtn'); if(rb) rb.style.opacity='.4';
+  if(!ativos.length && !cryptos.length && !exterior.length){ if(rb) rb.style.opacity=''; if(!silent) alert('Adicione ativos primeiro (ações, cripto ou exterior).'); return; }
+  const res=await Promise.allSettled([atualizarBR(), atualizarCripto(), atualizarFX()]);
+  localStorage.setItem('aurum_quote_time', Date.now()); renderSub();
+  const cur=document.querySelector('.navitem.active'); nav(cur?cur.dataset.view:'dash');
+  if(rb) rb.style.opacity='';
+  if(!silent){ const erros=res.filter(r=>r.status==='rejected'); erros.length ? alert('Atualizado, mas algo falhou:\n'+erros.map(e=>'• '+e.reason.message).join('\n')+'\n\n(Ações dos EUA precisam de token grátis da brapi.)') : alert('Cotações atualizadas ao vivo: ações, cripto e dólar.'); }
+}
+const atualizarCotacoes = atualizarTudo;
+
+const titulos = {dash:'Dashboard', br:'Carteira Brasil', prov:'Proventos', ext:'Exterior', cripto:'Cripto', mov:'Movimentações', analise:'Análise de ativos'};
+function nav(v){
+  document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
+  document.getElementById('viewTitle').textContent = titulos[v]||'Dashboard';
+  const c = document.getElementById('content');
+  if(v==='dash') c.innerHTML = viewDash();
+  else if(v==='br') c.innerHTML = viewBR();
+  else if(v==='prov') c.innerHTML = viewProv();
+  else if(v==='mov') c.innerHTML = viewMov();
+  else if(v==='cripto') c.innerHTML = viewCripto();
+  else if(v==='ext') c.innerHTML = viewExt();
+  else if(v==='analise') c.innerHTML = viewAnalise();
+  else c.innerHTML = emBreve(titulos[v]);
+}
+
+function totais(){ let total=0, custo=0; const porClasse={}; ativos.forEach(a=>{ const pos=a.qtd*a.preco; total+=pos; custo+=a.qtd*a.pm; porClasse[a.classe]=(porClasse[a.classe]||0)+pos; }); return {total, custo, porClasse}; }
+
+function donut(porClasse, total){
+  const r=64, c=2*Math.PI*r;
+  if(!total) return `<svg viewBox="0 0 160 160" width="170" height="170"><circle r="${r}" cx="80" cy="80" fill="none" stroke="var(--border)" stroke-width="20"/></svg>`;
+  let acc=0, segs='';
+  for(const [k,v] of Object.entries(porClasse)){ const len=v/total*c; segs+=`<circle r="${r}" cx="80" cy="80" fill="none" stroke="${coresClasse[k]||'#999'}" stroke-width="20" stroke-dasharray="${len-2} ${c-len+2}" stroke-dashoffset="${-acc}" stroke-linecap="round" transform="rotate(-90 80 80)"/>`; acc+=len; }
+  return `<svg viewBox="0 0 160 160" width="170" height="170">${segs}</svg>`;
+}
+
+function viewDash(){
+  const {total,custo,porClasse}=totais();
+  const rent= custo>0 ? ((total-custo)/custo*100) : 0;
+  const lucro = total-custo;
+  const provAno=proventos.reduce((a,b)=>a+b,0);
+  const totalCripto=cryptos.reduce((s,c)=>s+c.qtd*c.preco,0);
+  const totalExtBRL=exterior.reduce((s,a)=>s+a.qtd*a.preco,0)*(fxUSD||0);
+  const ext=totalCripto+totalExtBRL; const grandTotal=total+ext;
+  const aloc=Object.assign({},porClasse);
+  if(totalCripto>0) aloc['Cripto']=(aloc['Cripto']||0)+totalCripto;
+  exterior.forEach(a=>{ aloc[a.classe]=(aloc[a.classe]||0)+a.qtd*a.preco*(fxUSD||0); });
+  const pct=(v,base)=>base>0?(v/base*100).toFixed(0):'0';
+  let diaRS=0,baseDia=0,mesRS=0,baseMes=0;
+  ativos.forEach(a=>{ const p=a.qtd*a.preco; if(a.varDia!=null&&a.varDia!==undefined){ diaRS+=p*a.varDia/100; baseDia+=p; } if(a.varMes!=null&&a.varMes!==undefined){ mesRS+=p*a.varMes/100; baseMes+=p; } });
+  cryptos.forEach(c=>{ const p=c.qtd*c.preco; if(c.var24!=null&&c.var24!==undefined){ diaRS+=p*c.var24/100; baseDia+=p; } });
+  const diaPct=baseDia?diaRS/baseDia*100:0, mesPct=baseMes?mesRS/baseMes*100:0;
+  const temVar=baseDia>0;
+  const ordDia=[...ativos].filter(a=>a.varDia!=null).sort((a,b)=>b.varDia-a.varDia);
+  const alta=ordDia[0], baixa=ordDia[ordDia.length-1];
+  const sig=v=>v>=0?'+':'';
+  const classesOrden=Object.entries(aloc).sort((a,b)=>b[1]-a[1]);
+  let leg=''; classesOrden.forEach(([k,v])=>leg+=`<div class="li"><span class="name"><span class="dot" style="background:${coresClasse[k]||'#999'}"></span>${k}</span><span class="pct">${pct(v,grandTotal)}%</span></div>`);
+  if(!leg) leg='<div class="empty" style="padding:10px">Adicione ativos para ver a alocação.</div>';
+  const maxP=Math.max(...proventos,1);
+  let bars=''; proventos.forEach((p,i)=>{ bars+=`<div class="b"><div class="fill" style="height:${p/maxP*130}px" title="${fmt0(p)}"></div><div class="m">${meses[i]}</div></div>`; });
+  const top=[...ativos].sort((a,b)=>b.qtd*b.preco-a.qtd*a.preco).slice(0,5);
+  let rows=''; top.forEach(a=>{ const pos=a.qtd*a.preco; const r=a.pm>0?((a.preco-a.pm)/a.pm*100):0; const vd=(a.varDia!=null&&a.varDia!==undefined); rows+=`<tr><td><div class="tk">${a.ticker}<small>${a.classe}</small></div></td><td>${a.qtd.toLocaleString('pt-BR')}</td><td>${fmt(a.preco)}</td><td class="${vd?(a.varDia>=0?'up':'down'):''}">${vd?sig(a.varDia)+a.varDia.toFixed(2)+'%':'—'}</td><td>${fmt0(pos)}</td><td class="${r>=0?'up':'down'}">${sig(r)}${r.toFixed(1)}%</td></tr>`; });
+  if(!rows) rows='<tr><td colspan="6" class="empty">Nenhum ativo ainda — vá em Brasil e importe seu extrato da B3.</td></tr>';
+  return `
+  <div class="hero">
+    <div class="lbl">Patrimônio total</div>
+    <div class="big">${fmt0(grandTotal)}</div>
+    <div class="meta">
+      <span>Resultado <b class="${lucro>=0?'up':'down'}">${lucro>=0?'+':''}${fmt0(lucro)} (${rent>=0?'+':''}${rent.toFixed(1)}%)</b></span>
+      <span>Brasil <b>${fmt0(total)}</b></span>
+      <span>Exterior <b>${fmt0(totalExtBRL)}</b></span>
+      <span>Cripto <b>${fmt0(totalCripto)}</b></span>
+      <span>Proventos no ano <b>${fmt0(provAno)}</b></span>
+    </div>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="lbl"><span class="ci">↻</span>Variação hoje</div><div class="val ${diaRS>=0?'up':'down'}">${temVar?sig(diaRS)+fmt0(diaRS):'—'}</div><div class="delta ${diaPct>=0?'up':'down'}">${temVar?sig(diaPct)+diaPct.toFixed(2)+'% no dia':'clique em ↻ p/ cotação'}</div></div>
+    <div class="card"><div class="lbl"><span class="ci">↗</span>No mês</div><div class="val ${mesRS>=0?'up':'down'}">${baseMes?sig(mesRS)+fmt0(mesRS):'—'}</div><div class="delta ${mesPct>=0?'up':'down'}">${baseMes?sig(mesPct)+mesPct.toFixed(2)+'% em 30 dias':'—'}</div></div>
+    <div class="card"><div class="lbl"><span class="ci">▲</span>Lucro/Prejuízo total</div><div class="val ${lucro>=0?'up':'down'}">${fmt0(lucro)}</div><div class="delta ${rent>=0?'up':'down'}">${sig(rent)}${rent.toFixed(1)}% · investido ${fmt0(custo)}</div></div>
+    <div class="card"><div class="lbl"><span class="ci">❖</span>Proventos no ano</div><div class="val">${fmt0(provAno)}</div><div class="delta">${fmt0(provAno/12)} por mês</div></div>
+  </div>
+  ${temVar&&alta&&baixa&&ordDia.length>1?`<div class="row2" style="margin-bottom:18px">
+    <div class="panel" style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Maior alta do dia</div><div style="font-weight:600;font-size:16px">${alta.ticker}</div></div><div class="up serif" style="font-size:26px;font-weight:600">${sig(alta.varDia)}${alta.varDia.toFixed(2)}%</div></div>
+    <div class="panel" style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Maior baixa do dia</div><div style="font-weight:600;font-size:16px">${baixa.ticker}</div></div><div class="down serif" style="font-size:26px;font-weight:600">${sig(baixa.varDia)}${baixa.varDia.toFixed(2)}%</div></div>
+  </div>`:''}
+  <div class="row2">
+    <div class="panel"><h3>Alocação por classe</h3><div class="donut-wrap"><div class="donut-center">${donut(aloc,grandTotal)}<div class="ctxt"><span class="s">Total</span><span class="v">${grandTotal>=1000?(grandTotal/1000).toFixed(0)+'k':grandTotal.toFixed(0)}</span></div></div><div class="legend">${leg}</div></div></div>
+    <div class="panel"><h3>Proventos mês a mês</h3><div class="bars">${bars}</div></div>
+  </div>
+  <div class="panel">
+    <div class="toolbar" style="margin-bottom:6px"><h3 style="margin:0">Maiores posições</h3><button class="btn gold" onclick="nav('br')">+ Gerenciar carteira</button></div>
+    <table><thead><tr><th>Ativo</th><th>Qtd</th><th>Preço</th><th>Dia</th><th>Posição</th><th>Result.</th></tr></thead><tbody>${rows}</tbody></table>
+  </div>`;
+}
+
+function viewBR(){
+  const sig=v=>v>=0?'+':'';
+  let rows=''; ativos.forEach((a,i)=>{ const pos=a.qtd*a.preco; const r=a.pm>0?((a.preco-a.pm)/a.pm*100):0; const vd=(a.varDia!=null&&a.varDia!==undefined); rows+=`<tr><td>${a.ticker}</td><td><span class="pill">${a.classe}</span></td><td>${a.qtd.toLocaleString('pt-BR')}</td><td>${fmt(a.pm)}</td><td>${fmt(a.preco)}</td><td class="${vd?(a.varDia>=0?'up':'down'):''}">${vd?sig(a.varDia)+a.varDia.toFixed(2)+'%':'—'}</td><td>${fmt0(pos)}</td><td class="${r>=0?'up':'down'}">${sig(r)}${r.toFixed(1)}%</td><td><button class="btn" onclick="remover(${i})" style="height:32px;padding:0 12px">✕</button></td></tr>`; });
+  if(!rows) rows='<tr><td colspan="9" class="empty">Nenhum ativo ainda. Importe seu extrato da B3 acima, ou lance manualmente.</td></tr>';
+  return `
+  <div class="panel importbar">
+    <div><h3 style="margin-bottom:2px">Importar movimentação da B3</h3><p>Selecione o arquivo <b>.xlsx</b> da área do investidor. A JN Invest monta as posições, calcula o preço médio e lança os proventos automaticamente.</p></div>
+    <div style="white-space:nowrap;"><input type="file" id="b3file" accept=".xlsx" class="hidden" onchange="importB3(this)"><button class="btn gold" onclick="document.getElementById('b3file').click()">⬆ Importar XLSX</button></div>
+  </div>
+  <div class="panel" style="margin-bottom:18px">
+    <h3 style="margin-bottom:14px">Adicionar ativo</h3>
+    <div style="position:relative">
+      <input id="assetSearch" placeholder="Busque pelo código ou nome — ex: PETR, Banco do Brasil, HGLG..." oninput="buscarAtivos(this.value)" autocomplete="off" style="margin:0">
+      <div id="searchResults"></div>
+    </div>
+    <div id="confirmAdd"></div>
+    <details style="margin-top:16px">
+      <summary style="cursor:pointer; color:var(--muted); font-size:13px">Ou lance manualmente (renda fixa, ativos sem cotação na bolsa)</summary>
+      <div class="formrow" style="margin-top:14px; margin-bottom:0">
+        <div><label>Ticker</label><input id="f_ticker" placeholder="Tesouro Selic"></div>
+        <div><label>Classe</label><select id="f_classe"><option>Renda Fixa</option><option>Ações</option><option>FIIs</option><option>BDRs</option><option>ETFs</option></select></div>
+        <div><label>Quantidade</label><input id="f_qtd" type="number" placeholder="1"></div>
+        <div><label>Preço médio</label><input id="f_pm" type="number" placeholder="0,00"></div>
+        <div><label>Preço atual</label><input id="f_preco" type="number" placeholder="0,00"></div>
+        <button class="btn gold" onclick="addAtivo()">+ Adicionar</button>
+      </div>
+    </details>
+  </div>
+  <div class="panel"><table><thead><tr><th>Ativo</th><th>Classe</th><th>Qtd</th><th>P. médio</th><th>P. atual</th><th>Dia</th><th>Posição</th><th>Result.</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function addAtivo(){
+  const t=document.getElementById('f_ticker').value.trim().toUpperCase();
+  const qtd=parseFloat(document.getElementById('f_qtd').value), pm=parseFloat(document.getElementById('f_pm').value), preco=parseFloat(document.getElementById('f_preco').value);
+  if(!t||!qtd||!pm||!preco){ alert('Preencha ticker, quantidade, preço médio e preço atual.'); return; }
+  ativos.push({ticker:t, classe:document.getElementById('f_classe').value, qtd, pm, preco}); save(); nav('br');
+}
+function remover(i){ ativos.splice(i,1); save(); nav('br'); }
+
+let srTimer=null, srResults=[], selAtivo=null;
+function buscarAtivos(q){
+  clearTimeout(srTimer);
+  const box=document.getElementById('searchResults'); if(!box) return;
+  q=q.trim();
+  if(q.length<2){ box.innerHTML=''; return; }
+  box.innerHTML='<div class="search-results"><div class="sr-hint">Buscando…</div></div>';
+  srTimer=setTimeout(async()=>{
+    try{
+      const token=brapiToken();
+      const res=await fetch('https://brapi.dev/api/quote/list?search='+encodeURIComponent(q)+'&limit=8'+(token?('&token='+token):''));
+      const data=await res.json();
+      srResults=(data.stocks||[]).filter(s=>!/F$/.test(s.stock));
+      if(!srResults.length){ box.innerHTML='<div class="search-results"><div class="sr-hint">Nada encontrado para "'+q+'".</div></div>'; return; }
+      let h='<div class="search-results">';
+      srResults.forEach((s,i)=>{ h+=`<div class="sr-item" onclick="selecionarAtivo(${i})"><img src="${s.logo||''}" onerror="this.style.visibility='hidden'"><div class="nm"><b>${s.stock}</b><small>${s.name||''}</small></div><span class="pr">${s.close?('R$ '+s.close.toLocaleString('pt-BR',{minimumFractionDigits:2})):'—'}</span></div>`; });
+      h+='</div>'; box.innerHTML=h;
+    }catch(e){ box.innerHTML='<div class="search-results"><div class="sr-hint">Erro ao buscar (limite da API?). Tente de novo em instantes.</div></div>'; }
+  },300);
+}
+function selecionarAtivo(i){
+  const s=srResults[i]; if(!s) return;
+  selAtivo={ticker:s.stock, nome:s.name||'', preco:s.close||0, classe:classeDoTicker(s.stock), logo:s.logo||''};
+  document.getElementById('searchResults').innerHTML='';
+  document.getElementById('assetSearch').value=s.stock;
+  document.getElementById('confirmAdd').innerHTML=`
+    <div class="confirm-add">
+      <div class="sel"><img src="${selAtivo.logo}" onerror="this.style.visibility='hidden'"><div class="tk"><b>${selAtivo.ticker}</b><small style="color:var(--faint)">${selAtivo.classe} · ao vivo R$ ${selAtivo.preco.toLocaleString('pt-BR',{minimumFractionDigits:2})}</small></div></div>
+      <div><label>Quantidade comprada</label><input id="c_qtd" type="number" placeholder="100" style="margin:0; width:130px"></div>
+      <div><label>Preço médio pago</label><input id="c_pm" type="number" value="${selAtivo.preco}" style="margin:0; width:140px"></div>
+      <button class="btn gold" onclick="confirmarAtivo()" style="height:42px">+ Adicionar à carteira</button>
+    </div>`;
+}
+function confirmarAtivo(){
+  if(!selAtivo) return;
+  const qtd=parseFloat(document.getElementById('c_qtd').value); const pm=parseFloat(document.getElementById('c_pm').value);
+  if(!qtd){ alert('Informe quantos você comprou.'); return; }
+  ativos.push({ticker:selAtivo.ticker, classe:selAtivo.classe, qtd, pm:pm||selAtivo.preco, preco:selAtivo.preco}); save();
+  selAtivo=null; nav('br');
+}
+
+const num = v => { if(v==null) return 0; const s=String(v).trim(); if(s==='-'||s==='') return 0; return parseFloat(s.replace(/\s/g,''))||0; };
+const norm = s => String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+function classeDoTicker(t){ if(/11$/.test(t)) return 'FIIs'; if(/(34|35|33|32)$/.test(t)) return 'BDRs'; return 'Ações'; }
+
+function classificar(tipo, produto){
+  if(/^futuro/i.test(produto)) return {cat:'Day trade', dest:'Day trade / IR'};
+  if(['compra','venda'].includes(tipo)) return {cat:'Posição', dest:'Carteira'};
+  if(['rendimento','dividendo','juros sobre capital proprio'].includes(tipo)) return {cat:'Provento', dest:'Proventos'};
+  if(tipo==='pagamento de juros') return {cat:'Juros RF', dest:'Proventos'};
+  if(tipo==='emprestimo') return {cat:'Aluguel', dest:'Proventos'};
+  if(['resgate antecipado','retirada de custodia'].includes(tipo)) return {cat:'Renda fixa', dest:'Carteira RF'};
+  if(tipo==='atualizacao') return {cat:'Atualização', dest:'Saldo RF'};
+  if(/subscricao|cessao de direitos/.test(tipo)) return {cat:'Subscrição', dest:'Eventos'};
+  if(/transferencia/.test(tipo)) return {cat:'Transferência', dest:'Custódia'};
+  return {cat:'Outros', dest:'—'};
+}
+
+function importB3(input){
+  const file = input.files[0]; if(!file) return;
+  if(typeof XLSX==='undefined'){ alert('A biblioteca de leitura não carregou (precisa de internet pra essa parte).'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const wb = XLSX.read(e.target.result, {type:'array'});
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+      const pos={}; const prov=[0,0,0,0,0,0,0,0,0,0,0,0]; const movs=[]; let nComp=0,nVend=0,nProv=0,nFut=0;
+      for(let r=1;r<rows.length;r++){
+        const row=rows[r]; if(!row||!row[0]) continue;
+        const es=String(row[0]||'').trim(); const data=String(row[1]||''); const tipoRaw=String(row[2]||'').trim();
+        const produto=String(row[3]||'').trim(); const inst=String(row[4]||'').trim();
+        const tipo=norm(tipoRaw); const ticker=produto.split(' - ')[0].trim().toUpperCase();
+        const qtd=num(row[5]); const preco=num(row[6]); const valor=num(row[7]);
+        const {cat,dest}=classificar(tipo, produto);
+        movs.push({es,data,tipo:tipoRaw,produto,inst,qtd,preco,valor,cat,dest});
+        if(cat==='Day trade'){ nFut++; continue; }
+        if(tipo==='compra'){ if(!pos[ticker]) pos[ticker]={qtd:0,custo:0,classe:classeDoTicker(ticker)}; pos[ticker].qtd+=qtd; pos[ticker].custo+=valor; nComp++; }
+        else if(tipo==='venda'){ if(pos[ticker]&&pos[ticker].qtd>0){ const pm=pos[ticker].custo/pos[ticker].qtd; pos[ticker].qtd-=qtd; pos[ticker].custo-=qtd*pm; if(pos[ticker].qtd<0.0001){pos[ticker].qtd=0;pos[ticker].custo=0;} } nVend++; }
+        else if(dest==='Proventos' && valor>0){ const m=parseInt(data.split('/')[1])-1; if(m>=0&&m<12){ prov[m]+=valor; nProv++; } }
+      }
+      const novos=[]; for(const [t,p] of Object.entries(pos)){ if(p.qtd>0.0001){ const pm=p.custo/p.qtd; novos.push({ticker:t,classe:p.classe,qtd:Math.round(p.qtd*100)/100,pm:Math.round(pm*100)/100,preco:Math.round(pm*100)/100}); } }
+      ativos=novos; save(); proventos=prov; saveProv(); movimentacoes=movs; saveMov();
+      alert('Importação concluída!\n\n• '+movs.length+' movimentações guardadas (extrato completo)\n• '+novos.length+' posições em aberto montadas\n• '+nComp+' compras / '+nVend+' vendas de ativos\n• '+nFut+' operações de day trade (futuros)\n• '+nProv+' proventos lançados\n\nVeja tudo na aba "Movimentações". Buscando cotações ao vivo...');
+      nav('mov'); atualizarCotacoes(true);
+    }catch(err){ alert('Não consegui ler o arquivo: '+err.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function viewProv(){
+  const {custo}=totais();
+  const total=proventos.reduce((a,b)=>a+b,0); const maxP=Math.max(...proventos,1);
+  const yoc= custo>0 ? (total/custo*100).toFixed(1)+'%' : '—';
+  let bars=''; proventos.forEach((p,i)=>{ bars+=`<div class="b"><div class="fill" style="height:${p/maxP*130}px"></div><div class="m">${meses[i]}</div></div>`; });
+  let rows=''; proventos.forEach((p,i)=>{ rows+=`<tr><td>${meses[i]}/2026</td><td><input type="number" value="${p||''}" placeholder="0,00" onchange="setProv(${i},this.value)" style="height:36px;width:150px;margin:0;text-align:right"></td></tr>`; });
+  return `
+  <div class="cards">
+    <div class="card"><div class="lbl">Total no ano</div><div class="val">${fmt0(total)}</div></div>
+    <div class="card"><div class="lbl">Média mensal</div><div class="val">${fmt0(total/12)}</div></div>
+    <div class="card"><div class="lbl">Maior mês</div><div class="val">${fmt0(total?maxP:0)}</div></div>
+    <div class="card"><div class="lbl">Yield on cost</div><div class="val">${yoc}</div></div>
+  </div>
+  <div class="panel" style="margin-bottom:18px"><h3>Proventos recebidos</h3><div class="bars">${bars}</div></div>
+  <div class="panel"><h3>Lançar por mês</h3><p style="color:var(--muted);font-size:13px;margin-bottom:16px">Digite o valor recebido em cada mês — os gráficos atualizam na hora.</p><table><thead><tr><th>Mês</th><th>Valor recebido</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function setProv(i,v){ proventos[i]=parseFloat(v)||0; saveProv(); nav('prov'); }
+
+let movFilter='Todos';
+function setMovFilter(f){ movFilter=f; nav('mov'); }
+function viewMov(){
+  if(!movimentacoes.length) return `<div class="panel" style="text-align:center;padding:54px 20px"><div style="font-size:40px;color:var(--gold);margin-bottom:14px">≣</div><h3 style="margin-bottom:8px">Nenhuma movimentação ainda</h3><p style="color:var(--muted);font-size:14px;max-width:420px;margin:0 auto 18px">Importe seu extrato da B3 em "Brasil" e cada linha (compra, venda, day trade, provento, transferência...) aparece aqui com todos os campos.</p><button class="btn gold" onclick="nav('br')">Ir para importação</button></div>`;
+  const cats={}; let credito=0,debito=0; const fut={cred:0,deb:0};
+  movimentacoes.forEach(m=>{ cats[m.cat]=(cats[m.cat]||0)+1; if(/cred/i.test(m.es)) credito+=m.valor; else debito+=m.valor; if(m.cat==='Day trade'){ if(/cred/i.test(m.es)) fut.cred+=m.preco; else fut.deb+=m.preco; } });
+  const filtros=['Todos',...Object.keys(cats)];
+  let chips=''; filtros.forEach(f=>{ const n=f==='Todos'?movimentacoes.length:cats[f]; chips+=`<button class="btn ${movFilter===f?'gold':''}" style="height:34px;padding:0 14px" onclick="setMovFilter('${f}')">${f} <span style="opacity:.7">${n}</span></button>`; });
+  const lista=movimentacoes.filter(m=>movFilter==='Todos'||m.cat===movFilter);
+  const catColor={'Posição':'var(--gold-deep)','Provento':'var(--success)','Juros RF':'var(--success)','Aluguel':'var(--success)','Day trade':'#64748B','Renda fixa':'var(--info)','Atualização':'var(--muted)','Subscrição':'var(--info)','Transferência':'var(--muted)','Outros':'var(--muted)'};
+  let rows=''; lista.forEach(m=>{ const cred=/cred/i.test(m.es);
+    rows+=`<tr><td style="text-align:left"><span class="pill" style="color:${cred?'var(--success)':'var(--danger)'}">${cred?'↓ Crédito':'↑ Débito'}</span></td><td style="text-align:left">${m.data}</td><td style="text-align:left">${m.tipo}</td><td style="text-align:left"><div class="tk">${m.produto.split(' - ')[0]}<small>${m.produto.split(' - ').slice(1).join(' - ')||'—'}</small></div></td><td style="text-align:left;color:var(--muted)">${m.inst.replace(/ S\/?A.*/i,'')}</td><td>${m.qtd?m.qtd.toLocaleString('pt-BR'):'—'}</td><td>${m.preco?m.preco.toLocaleString('pt-BR',{minimumFractionDigits:2}):'—'}</td><td>${m.valor?fmt(m.valor):'—'}</td><td style="text-align:left"><span class="pill" style="color:${catColor[m.cat]||'var(--muted)'}">${m.cat}</span></td><td style="text-align:left;color:var(--muted)">${m.dest||'—'}</td></tr>`; });
+  return `
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">${chips}</div>
+  <div class="cards" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><div class="lbl">Linhas no extrato</div><div class="val">${movimentacoes.length}</div></div>
+    <div class="card"><div class="lbl">Total créditos</div><div class="val up">${fmt0(credito)}</div></div>
+    <div class="card"><div class="lbl">Total débitos</div><div class="val down">${fmt0(debito)}</div></div>
+    <div class="card"><div class="lbl">Day trade (resultado)</div><div class="val ${(fut.deb-fut.cred)>=0?'up':'down'}">${(fut.cred||fut.deb)?((fut.deb-fut.cred)>=0?'+':'')+(fut.deb-fut.cred).toLocaleString('pt-BR',{maximumFractionDigits:0})+' pts':'—'}</div></div>
+  </div>
+  <div class="panel">
+    <h3>Extrato completo ${movFilter!=='Todos'?'· '+movFilter:''}</h3>
+    <div style="max-height:520px;overflow:auto">
+    <table><thead><tr><th>Entrada/Saída</th><th>Data</th><th>Movimentação</th><th>Produto</th><th>Instituição</th><th>Qtd</th><th>Preço</th><th>Valor</th><th>Categoria</th><th>Destino</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>
+  </div>`;
+}
+
+let crTimer=null, crResults=[], selCripto=null;
+function buscarCripto(q){
+  clearTimeout(crTimer); const box=document.getElementById('crResults'); if(!box) return;
+  q=q.trim(); if(q.length<2){ box.innerHTML=''; return; }
+  box.innerHTML='<div class="search-results"><div class="sr-hint">Buscando…</div></div>';
+  crTimer=setTimeout(async()=>{
+    try{
+      const res=await fetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(q));
+      const data=await res.json(); crResults=(data.coins||[]).slice(0,8);
+      if(!crResults.length){ box.innerHTML='<div class="search-results"><div class="sr-hint">Nada encontrado.</div></div>'; return; }
+      let h='<div class="search-results">';
+      crResults.forEach((s,i)=>{ h+=`<div class="sr-item" onclick="selecionarCripto(${i})"><img src="${s.thumb||s.large||''}" onerror="this.style.visibility='hidden'"><div class="nm"><b>${(s.symbol||'').toUpperCase()}</b><small>${s.name||''}</small></div><span class="pr" style="font-size:12px;color:var(--faint)">${s.market_cap_rank?('#'+s.market_cap_rank):''}</span></div>`; });
+      h+='</div>'; box.innerHTML=h;
+    }catch(e){ box.innerHTML='<div class="search-results"><div class="sr-hint">Erro ao buscar (limite da API?).</div></div>'; }
+  },300);
+}
+async function selecionarCripto(i){
+  const s=crResults[i]; if(!s) return;
+  document.getElementById('crResults').innerHTML='<div class="search-results"><div class="sr-hint">Buscando preço…</div></div>';
+  let preco=0,img=s.large||s.thumb;
+  try{ const res=await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=brl&ids='+encodeURIComponent(s.id)); const d=await res.json(); if(d[0]){ preco=d[0].current_price; img=d[0].image; } }catch(e){}
+  selCripto={id:s.id, symbol:(s.symbol||'').toUpperCase(), nome:s.name||'', preco, img};
+  document.getElementById('crResults').innerHTML='';
+  document.getElementById('crSearch').value=selCripto.symbol;
+  document.getElementById('crConfirm').innerHTML=`<div class="confirm-add"><div class="sel"><img src="${selCripto.img}" style="border-radius:50%" onerror="this.style.visibility='hidden'"><div class="tk"><b>${selCripto.symbol}</b><small style="color:var(--faint)">${selCripto.nome} · ao vivo ${preco?fmt(preco):'—'}</small></div></div><div><label>Quantidade</label><input id="cr_qtd" type="number" step="any" placeholder="0,5" style="margin:0;width:130px"></div><div><label>Preço médio pago (R$)</label><input id="cr_pm" type="number" step="any" value="${preco}" style="margin:0;width:150px"></div><button class="btn gold" onclick="confirmarCripto()" style="height:42px">+ Adicionar</button></div>`;
+}
+function confirmarCripto(){
+  if(!selCripto) return; const qtd=parseFloat(document.getElementById('cr_qtd').value); const pm=parseFloat(document.getElementById('cr_pm').value);
+  if(!qtd){ alert('Informe a quantidade.'); return; }
+  cryptos.push({id:selCripto.id, symbol:selCripto.symbol, nome:selCripto.nome, img:selCripto.img, qtd, pm:pm||selCripto.preco, preco:selCripto.preco, var24:0}); saveCripto(); selCripto=null; nav('cripto');
+}
+function removerCripto(i){ cryptos.splice(i,1); saveCripto(); nav('cripto'); }
+function viewCripto(){
+  let total=0,custo=0,d24=0,base=0; const sig=v=>v>=0?'+':'';
+  cryptos.forEach(c=>{ const pos=c.qtd*c.preco; total+=pos; custo+=c.qtd*c.pm; if(c.var24!=null&&c.var24!==undefined){ d24+=pos*c.var24/100; base+=pos; } });
+  const lucro=total-custo, rent=custo>0?lucro/custo*100:0, pct24=base?d24/base*100:0;
+  let rows=''; cryptos.forEach((c,i)=>{ const pos=c.qtd*c.preco; const r=c.pm>0?((c.preco-c.pm)/c.pm*100):0; const v=(c.var24!=null&&c.var24!==undefined);
+    rows+=`<tr><td style="text-align:left"><div style="display:flex;align-items:center;gap:10px"><img src="${c.img||''}" style="width:26px;height:26px;border-radius:50%" onerror="this.style.visibility='hidden'"><div class="tk">${c.symbol}<small>${c.nome}</small></div></div></td><td>${c.qtd.toLocaleString('pt-BR',{maximumFractionDigits:8})}</td><td>${fmt(c.preco)}</td><td class="${v?(c.var24>=0?'up':'down'):''}">${v?sig(c.var24)+c.var24.toFixed(2)+'%':'—'}</td><td>${fmt0(pos)}</td><td class="${r>=0?'up':'down'}">${sig(r)}${r.toFixed(1)}%</td><td><button class="btn" onclick="removerCripto(${i})" style="height:32px;padding:0 12px">✕</button></td></tr>`; });
+  if(!rows) rows='<tr><td colspan="7" class="empty">Nenhuma cripto ainda. Busque acima (ex: bitcoin, ETH, solana) — preço ao vivo do CoinGecko.</td></tr>';
+  return `
+  <div class="cards">
+    <div class="card"><div class="lbl">Total em cripto</div><div class="val">${fmt0(total)}</div></div>
+    <div class="card"><div class="lbl">Variação 24h</div><div class="val ${d24>=0?'up':'down'}">${base?sig(d24)+fmt0(d24):'—'}</div><div class="delta ${pct24>=0?'up':'down'}">${base?sig(pct24)+pct24.toFixed(2)+'%':'clique em ↻'}</div></div>
+    <div class="card"><div class="lbl">Lucro/Prejuízo</div><div class="val ${lucro>=0?'up':'down'}">${fmt0(lucro)}</div><div class="delta ${rent>=0?'up':'down'}">${sig(rent)}${rent.toFixed(1)}%</div></div>
+    <div class="card"><div class="lbl">Moedas</div><div class="val">${cryptos.length}</div></div>
+  </div>
+  <div class="panel" style="margin-bottom:18px"><h3 style="margin-bottom:14px">Adicionar cripto</h3><div style="position:relative"><input id="crSearch" placeholder="Busque por nome ou símbolo — bitcoin, ETH, solana..." oninput="buscarCripto(this.value)" autocomplete="off" style="margin:0"><div id="crResults"></div></div><div id="crConfirm"></div></div>
+  <div class="panel"><table><thead><tr><th>Moeda</th><th>Qtd</th><th>Preço</th><th>24h</th><th>Posição</th><th>Result.</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function viewExt(){
+  const fx=fxUSD||0; const sig=v=>v>=0?'+':'';
+  let totalUSD=0,custoUSD=0; exterior.forEach(a=>{ totalUSD+=a.qtd*a.preco; custoUSD+=a.qtd*a.pm; });
+  const totalBRL=totalUSD*fx, lucroUSD=totalUSD-custoUSD, rent=custoUSD>0?lucroUSD/custoUSD*100:0;
+  let rows=''; exterior.forEach((a,i)=>{ const posUSD=a.qtd*a.preco; const r=a.pm>0?((a.preco-a.pm)/a.pm*100):0;
+    rows+=`<tr><td>${a.ticker}</td><td><span class="pill">${a.classe}</span></td><td>${a.qtd.toLocaleString('pt-BR')}</td><td>US$ ${a.preco.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td><td>US$ ${posUSD.toLocaleString('pt-BR',{minimumFractionDigits:2})}</td><td>${fx?fmt0(posUSD*fx):'—'}</td><td class="${r>=0?'up':'down'}">${sig(r)}${r.toFixed(1)}%</td><td><button class="btn" onclick="removerExt(${i})" style="height:32px;padding:0 12px">✕</button></td></tr>`; });
+  if(!rows) rows='<tr><td colspan="8" class="empty">Nenhum ativo de exterior ainda. Lance abaixo — o valor em reais usa o dólar ao vivo.</td></tr>';
+  return `
+  <div class="cards">
+    <div class="card"><div class="lbl">Total exterior (R$)</div><div class="val">${fx?fmt0(totalBRL):'—'}</div><div class="delta">US$ ${totalUSD.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div></div>
+    <div class="card"><div class="lbl">Dólar hoje</div><div class="val">${fx?('R$ '+fx.toLocaleString('pt-BR',{minimumFractionDigits:4})):'—'}</div><div class="delta ${fxVar>=0?'up':'down'}">${fx?sig(fxVar)+fxVar.toFixed(2)+'% no dia':'clique em ↻'}</div></div>
+    <div class="card"><div class="lbl">Lucro/Prejuízo</div><div class="val ${lucroUSD>=0?'up':'down'}">US$ ${lucroUSD.toLocaleString('pt-BR',{minimumFractionDigits:2})}</div><div class="delta ${rent>=0?'up':'down'}">${sig(rent)}${rent.toFixed(1)}%</div></div>
+    <div class="card"><div class="lbl">Ativos</div><div class="val">${exterior.length}</div></div>
+  </div>
+  <div class="panel" style="margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <div><h3 style="margin-bottom:2px">Cotação ao vivo de ações dos EUA</h3><p style="color:var(--muted);font-size:13px;max-width:520px">O dólar já é convertido ao vivo. Para puxar o preço dos papéis americanos (AAPL, REITs, ETFs) automaticamente, configure um token grátis da brapi.dev.</p></div>
+    <button class="btn" onclick="configToken()" style="white-space:nowrap">Configurar token</button>
+  </div>
+  <div class="formrow">
+    <div><label>Ticker</label><input id="e_ticker" placeholder="AAPL, O, VOO..."></div>
+    <div><label>Classe</label><select id="e_classe"><option>Stocks</option><option>REITs</option><option>ETFs</option></select></div>
+    <div><label>Quantidade</label><input id="e_qtd" type="number" step="any" placeholder="10"></div>
+    <div><label>Preço médio (US$)</label><input id="e_pm" type="number" step="any" placeholder="0.00"></div>
+    <div><label>Preço atual (US$)</label><input id="e_preco" type="number" step="any" placeholder="0.00"></div>
+    <button class="btn gold" onclick="addExt()">+ Adicionar</button>
+  </div>
+  <div class="panel"><table><thead><tr><th>Ativo</th><th>Classe</th><th>Qtd</th><th>Preço</th><th>Posição US$</th><th>Em R$</th><th>Result.</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function addExt(){ const t=document.getElementById('e_ticker').value.trim().toUpperCase(); const qtd=parseFloat(document.getElementById('e_qtd').value); const pm=parseFloat(document.getElementById('e_pm').value); const preco=parseFloat(document.getElementById('e_preco').value); if(!t||!qtd||!pm||!preco){ alert('Preencha ticker, quantidade e preços.'); return; } exterior.push({ticker:t,classe:document.getElementById('e_classe').value,qtd,pm,preco}); saveExt(); nav('ext'); }
+function removerExt(i){ exterior.splice(i,1); saveExt(); nav('ext'); }
+function configToken(){ const cur=localStorage.getItem('aurum_brapi_token')||''; const t=prompt('Cole seu token grátis da brapi.dev (registre em brapi.dev). Deixe vazio para remover.', cur); if(t!==null){ if(t.trim()){ localStorage.setItem('aurum_brapi_token',t.trim()); alert('Token salvo! Agora ações dos EUA e o limite maior da B3 ficam disponíveis. Clique em ↻ para atualizar.'); } else { localStorage.removeItem('aurum_brapi_token'); alert('Token removido.'); } } }
+
+let anTimer=null, anResults=[], anData=null;
+function buscarAnalise(q){
+  clearTimeout(anTimer); const box=document.getElementById('anResults'); if(!box) return;
+  q=q.trim(); if(q.length<2){ box.innerHTML=''; return; }
+  box.innerHTML='<div class="search-results"><div class="sr-hint">Buscando…</div></div>';
+  anTimer=setTimeout(async()=>{
+    try{
+      const token=brapiToken();
+      const res=await fetch('https://brapi.dev/api/quote/list?search='+encodeURIComponent(q)+'&limit=8'+(token?('&token='+token):''));
+      const data=await res.json(); anResults=(data.stocks||[]).filter(s=>!/F$/.test(s.stock));
+      if(!anResults.length){ box.innerHTML='<div class="search-results"><div class="sr-hint">Nada encontrado.</div></div>'; return; }
+      let h='<div class="search-results">';
+      anResults.forEach(s=>{ h+=`<div class="sr-item" onclick="analisarAtivo('${s.stock}')"><img src="${s.logo||''}" onerror="this.style.visibility='hidden'"><div class="nm"><b>${s.stock}</b><small>${s.name||''}</small></div><span class="pr" style="font-size:12px;color:var(--faint)">${s.sector||''}</span></div>`; });
+      h+='</div>'; box.innerHTML=h;
+    }catch(e){ box.innerHTML='<div class="search-results"><div class="sr-hint">Erro ao buscar (limite da API?).</div></div>'; }
+  },300);
+}
+async function analisarAtivo(ticker){
+  anData={loading:true,ticker}; nav('analise');
+  try{
+    const res=await fetch(JN_API+'/api/fundamentos/'+encodeURIComponent(ticker));
+    const f=await res.json();
+    if(!res.ok || f.erro || (f.pl==null && f.pvp==null)) throw new Error(f.erro||'ativo não encontrado');
+    let x={};
+    try{ const token=brapiToken(); const b=await fetch('https://brapi.dev/api/quote/'+encodeURIComponent(ticker)+(token?('?token='+token):'')); const bd=await b.json(); const r=bd.results&&bd.results[0]; if(r) x={logo:r.logourl, preco:r.regularMarketPrice, varDia:r.regularMarketChangePercent, low52:r.fiftyTwoWeekLow, high52:r.fiftyTwoWeekHigh, nome:r.longName}; }catch(e){}
+    anData={f,x};
+  }catch(e){ anData={erro:e.message}; }
+  nav('analise');
+}
+function fichaAtivo(d){
+  const f=d.f||{}, x=d.x||{}; const sig=v=>v>=0?'+':'';
+  const n2=v=>(v==null||isNaN(v))?'—':Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const pc=v=>(v==null||isNaN(v))?'—':Number(v).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:2})+'%';
+  const bi=v=>{ if(v==null||isNaN(v)) return '—'; const a=Math.abs(v); if(a>=1e9) return (v/1e9).toLocaleString('pt-BR',{maximumFractionDigits:2})+' bi'; if(a>=1e6) return (v/1e6).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mi'; return v.toLocaleString('pt-BR'); };
+  const preco = x.preco || f.cotacao; const chg = (x.varDia!=null)?x.varDia:null;
+  const ind=(l,v,hint)=>`<div style="background:var(--surface2);border-radius:10px;padding:13px 15px"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">${l}</div><div style="font-size:18px;font-weight:700">${v}</div>${hint?`<div style="font-size:11px;color:var(--faint);margin-top:3px">${hint}</div>`:''}</div>`;
+  return `
+  <div class="panel" style="margin-bottom:16px; display:flex; align-items:center; gap:18px; flex-wrap:wrap">
+    <img src="${x.logo||''}" style="width:54px;height:54px;border-radius:12px;background:var(--surface2)" onerror="this.style.visibility='hidden'">
+    <div style="flex:1;min-width:200px"><div style="font-size:22px;font-weight:700">${f.ticker}</div><div style="color:var(--muted);font-size:13px">${f.empresa||x.nome||''}${f.setor?(' · '+f.setor):''}</div></div>
+    <div style="text-align:right"><div style="font-size:26px;font-weight:700">${preco?fmt(preco):'—'}</div>${chg!=null?`<div class="${chg>=0?'up':'down'}" style="font-size:13px">${sig(chg)}${chg.toFixed(2)}% hoje</div>`:''}</div>
+  </div>
+  <div class="row2">
+    <div class="panel"><h3>Indicadores-chave</h3><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      ${ind('P/L', n2(f.pl))}
+      ${ind('P/VP', n2(f.pvp))}
+      ${ind('Dividend Yield', pc(f.dy))}
+      ${ind('ROE', pc(f.roe))}
+      ${ind('ROIC', pc(f.roic))}
+      ${ind('Margem líq.', pc(f.margemLiquida))}
+      ${ind('LPA', n2(f.lpa))}
+      ${ind('VPA', n2(f.vpa))}
+      ${ind('EV / EBITDA', n2(f.evEbitda))}
+    </div></div>
+    <div class="panel"><h3>Dados da empresa</h3><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+      ${ind('Valor de mercado', 'R$ '+bi(f.valorMercado))}
+      ${ind('Setor', f.setor||'—')}
+      ${ind('Liquidez corr.', n2(f.liquidezCorrente))}
+      ${ind('Cotação', f.cotacao?fmt(f.cotacao):'—')}
+      ${ind('Mín. 52 sem.', x.low52?fmt(x.low52):'—')}
+      ${ind('Máx. 52 sem.', x.high52?fmt(x.high52):'—')}
+    </div></div>
+  </div>
+  <p style="color:var(--faint);font-size:12px;margin-top:14px">Indicadores ao vivo da <b>Fundamentus</b> via sua API no Railway. Logo, preço e variação do dia da brapi.</p>`;
+}
+function pedirTokenBrapi(){
+  const cur=localStorage.getItem('aurum_brapi_token')||'';
+  const t=prompt('Cole seu token grátis da brapi.dev\n(crie a conta gratuita em brapi.dev/dashboard e copie o token):', cur);
+  if(t===null) return;
+  if(t.trim()){ localStorage.setItem('aurum_brapi_token',t.trim()); alert('Token salvo! Agora as cotações e a análise funcionam para todos os ativos.'); }
+  else { localStorage.removeItem('aurum_brapi_token'); alert('Token removido.'); }
+  if(anData&&anData.ticker){ analisarAtivo(anData.ticker); } else { const a=document.querySelector('.navitem.active'); nav(a?a.dataset.view:'dash'); }
+}
+function viewAnalise(){
+  const temToken=!!brapiToken();
+  let card;
+  if(!anData) card='<div class="panel" style="text-align:center;padding:54px 20px;color:var(--muted)"><div style="font-size:40px;color:var(--gold);margin-bottom:12px">◷</div><div style="font-size:15px;color:var(--text);margin-bottom:6px">Análise fundamentalista</div><div style="max-width:420px;margin:0 auto">Busque um ativo acima (ex: PETR4, ITSA4, WEGE3) e veja P/L, P/VP, dividend yield, valor de mercado e mais — tudo ao vivo.</div></div>';
+  else if(anData.loading) card='<div class="panel" style="text-align:center;padding:44px;color:var(--muted)">Buscando dados de '+anData.ticker+'…</div>';
+  else if(anData.erro){ const isTok=/token/i.test(anData.erro);
+    card=`<div class="panel" style="text-align:center;padding:40px 20px"><div style="color:var(--danger);margin-bottom:${isTok?'14px':'0'}">Não consegui carregar: ${anData.erro}</div>${isTok?`<p style="color:var(--muted);font-size:13px;max-width:470px;margin:0 auto 16px">A brapi.dev passou a exigir um token (gratuito) para a maioria dos ativos. Registre-se em <b>brapi.dev</b>, copie o token e cole aqui — vale para todo o sistema.</p><button class="btn gold" onclick="pedirTokenBrapi()">Configurar token grátis</button>`:''}</div>`;
+  }
+  else card=fichaAtivo(anData);
+  return `
+  <div class="panel" style="margin-bottom:18px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px"><h3 style="margin:0">Buscar ativo para análise</h3>${temToken?'':'<button class="btn" style="height:34px;font-size:12px" onclick="pedirTokenBrapi()">Ativar dados (admin)</button>'}</div>
+    <div style="position:relative"><input id="anSearch" placeholder="Digite o código — PETR4, ITSA4, WEGE3..." oninput="buscarAnalise(this.value)" autocomplete="off" style="margin:0"><div id="anResults"></div></div>
+  </div>
+  ${card}`;
+}
+
+function emBreve(nome){ return `<div class="panel" style="text-align:center; padding:64px 20px;"><div style="font-size:42px; color:var(--gold); margin-bottom:14px;">✦</div><h3 style="margin-bottom:8px">${nome}</h3><p style="color:var(--muted); font-size:14px; max-width:380px; margin:0 auto;">Esta carteira faz parte do roteiro da JN Invest, mas ainda não foi montada no protótipo. Me peça pra construir em seguida.</p></div>`; }
+</script>
+</body>
+</html>

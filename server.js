@@ -7,6 +7,7 @@
 
 const express = require('express');
 const cheerio = require('cheerio');
+const path = require('path');
 
 const app = express();
 app.use((req, res, next) => {            // libera o frontend a chamar essa API
@@ -80,8 +81,9 @@ app.get('/api/fundamentos/:ticker', async (req, res) => {
   }
 });
 
+// serve o site (landing + cadastro + dashboard) na raiz
 app.get('/', (req, res) =>
-  res.send('JN Invest API no ar. Teste: /api/fundamentos/WEGE3')
+  res.sendFile(path.join(__dirname, 'index.html'))
 );
 
 const port = process.env.PORT || 3000;

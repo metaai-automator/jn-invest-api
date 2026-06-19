@@ -466,7 +466,7 @@
       <div class="topright">
         <button class="iconbtn" id="refreshBtn" onclick="atualizarCotacoes(false)" aria-label="Atualizar cotações" title="Atualizar cotações ao vivo"></button>
         <button class="iconbtn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema"></button>
-        <div class="avatar">JN</div>
+        <div class="avatar" id="avatarTop" onclick="nav('perfil')" style="cursor:pointer" title="Meu perfil">JN</div>
       </div>
     </div>
     <div id="content"></div>
@@ -510,6 +510,25 @@ const SUPABASE_URL = 'https://pskgdneioplfyxgtlpcn.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBza2dkbmVpb3BsZnl4Z3RscGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4ODg4NDIsImV4cCI6MjA5NzQ2NDg0Mn0.zmzZh3QG8NABvuzTGKtXy-H1w8T66jVUyzE3ogR6Vyk';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let currentUser = null;
+let perfil = { nome:'', telefone:'', plano:'gratuito', email:'' };
+
+function iniciais(nome, email){
+  const base=(nome||email||'JN').trim();
+  const parts=base.split(/[\s@._-]+/).filter(Boolean);
+  let s=(parts[0]?parts[0][0]:'')+(parts[1]?parts[1][0]:'');
+  return (s||base[0]||'JN').toUpperCase().slice(0,2);
+}
+function renderAvatar(){
+  const el=document.getElementById('avatarTop'); if(!el||!currentUser) return;
+  const md=currentUser.user_metadata||{}; const foto=md.avatar_url||md.picture;
+  if(foto){ el.innerHTML='<img src="'+foto+'" style="width:100%;height:100%;border-radius:50%;object-fit:cover" referrerpolicy="no-referrer">'; el.style.padding='0'; el.style.overflow='hidden'; }
+  else { el.style.padding=''; el.textContent=iniciais(perfil.nome||md.name||md.full_name, currentUser.email); }
+}
+async function carregarPerfil(){
+  if(!currentUser) return; const md=currentUser.user_metadata||{};
+  const {data:prof}=await sb.from('profiles').select('*').eq('id',currentUser.id).maybeSingle();
+  perfil={ nome:(prof&&prof.nome)||md.name||md.full_name||'', telefone:(prof&&prof.telefone)||'', plano:(prof&&prof.plano)||'gratuito', email:currentUser.email };
+}
 
 const _iso = s => { if(!s) return null; const p=String(s).split('/'); return p.length===3 ? (p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0')) : (String(s).slice(0,10)||null); };
 const _br  = s => { if(!s) return ''; const p=String(s).slice(0,10).split('-'); return p.length===3 ? (p[2]+'/'+p[1]+'/'+p[0]) : String(s); };
@@ -552,8 +571,9 @@ function showLogin(){ show('login'); }
 function showSignup(){ show('signup'); }
 async function iniciarSessao(user){
   currentUser = user;
+  try{ await carregarPerfil(); }catch(e){ console.error('carregarPerfil', e); }
   try{ await carregarDados(); }catch(e){ console.error('carregarDados', e); }
-  show('app'); applyTheme(document.documentElement.getAttribute('data-theme')); nav('dash'); renderSub();
+  show('app'); applyTheme(document.documentElement.getAttribute('data-theme')); renderAvatar(); nav('dash'); renderSub();
   if(ativos.length||cryptos.length||exterior.length) atualizarTudo(true);
 }
 async function cadastrar(){
@@ -632,7 +652,7 @@ async function atualizarTudo(silent){
 }
 const atualizarCotacoes = atualizarTudo;
 
-const titulos = {dash:'Dashboard', br:'Carteira Brasil', prov:'Proventos', ext:'Exterior', cripto:'Cripto', mov:'Movimentações', analise:'Análise de ativos'};
+const titulos = {dash:'Dashboard', br:'Carteira Brasil', prov:'Proventos', ext:'Exterior', cripto:'Cripto', mov:'Movimentações', analise:'Análise de ativos', perfil:'Meu perfil'};
 function nav(v){
   document.querySelectorAll('.navitem').forEach(b=>b.classList.toggle('active', b.dataset.view===v));
   document.getElementById('viewTitle').textContent = titulos[v]||'Dashboard';
@@ -644,6 +664,7 @@ function nav(v){
   else if(v==='cripto') c.innerHTML = viewCripto();
   else if(v==='ext') c.innerHTML = viewExt();
   else if(v==='analise') c.innerHTML = viewAnalise();
+  else if(v==='perfil') c.innerHTML = viewPerfil();
   else c.innerHTML = emBreve(titulos[v]);
   document.getElementById('app').classList.remove('sidebar-open');
 }
@@ -1061,6 +1082,58 @@ function viewAnalise(){
     <div style="position:relative"><input id="anSearch" placeholder="Digite o código — PETR4, ITSA4, WEGE3..." oninput="buscarAnalise(this.value)" autocomplete="off" style="margin:0"><div id="anResults"></div></div>
   </div>
   ${card}`;
+}
+
+function viewPerfil(){
+  const md=currentUser ? (currentUser.user_metadata||{}) : {}; const foto=md.avatar_url||md.picture;
+  const av = foto ? `<img src="${foto}" referrerpolicy="no-referrer" style="width:66px;height:66px;border-radius:50%;object-fit:cover">`
+                  : `<div class="avatar" style="width:66px;height:66px;font-size:24px">${iniciais(perfil.nome,perfil.email)}</div>`;
+  return `
+  <div class="panel" style="max-width:640px">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:26px">
+      ${av}
+      <div style="min-width:0"><div style="font-size:21px;font-weight:700">${perfil.nome||'Sem nome'}</div><div style="color:var(--muted);font-size:14px;word-break:break-all">${perfil.email}</div></div>
+      <div style="margin-left:auto"><span class="pill" style="color:var(--gold);border-color:var(--gold-deep)">${perfil.plano==='premium'?'Premium':'Plano gratuito'}</span></div>
+    </div>
+    <label>Nome</label>
+    <input id="pf_nome" value="${(perfil.nome||'').replace(/"/g,'&quot;')}" placeholder="Seu nome">
+    <label>Telefone</label>
+    <input id="pf_tel" value="${(perfil.telefone||'').replace(/"/g,'&quot;')}" placeholder="(00) 00000-0000">
+    <label>E-mail</label>
+    <input value="${perfil.email}" disabled style="opacity:.55;cursor:not-allowed">
+    <button class="btn gold" onclick="salvarPerfil()" style="margin-top:6px">Salvar alterações</button>
+  </div>
+
+  <div class="panel" style="max-width:640px;margin-top:16px">
+    <h3 style="margin-bottom:6px">Senha de acesso</h3>
+    <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Defina uma senha para também conseguir entrar com e-mail e senha (além do Google).</p>
+    <label>Nova senha</label>
+    <input id="pf_senha" type="password" placeholder="Mínimo 6 caracteres">
+    <button class="btn" onclick="definirSenha()" style="margin-top:6px">Definir senha</button>
+  </div>
+
+  <div class="panel" style="max-width:640px;margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div style="color:var(--muted);font-size:14px">Encerrar a sessão neste dispositivo</div>
+    <button class="btn" onclick="sair()">Sair da conta</button>
+  </div>`;
+}
+async function salvarPerfil(){
+  if(!currentUser) return;
+  const nome=(document.getElementById('pf_nome').value||'').trim();
+  const tel=(document.getElementById('pf_tel').value||'').trim();
+  const {error}=await sb.from('profiles').update({nome, telefone:tel}).eq('id',currentUser.id);
+  if(error){ alert('Não consegui salvar: '+error.message); return; }
+  try{ await sb.auth.updateUser({data:{name:nome}}); }catch(e){}
+  perfil.nome=nome; perfil.telefone=tel; renderAvatar();
+  alert('Perfil salvo!');
+}
+async function definirSenha(){
+  const s=document.getElementById('pf_senha').value||'';
+  if(s.length<6){ alert('A senha precisa ter ao menos 6 caracteres.'); return; }
+  const {error}=await sb.auth.updateUser({password:s});
+  if(error){ alert('Não consegui definir a senha: '+error.message); return; }
+  document.getElementById('pf_senha').value='';
+  alert('Senha definida! Agora você também pode entrar com e-mail e senha.');
 }
 
 function emBreve(nome){ return `<div class="panel" style="text-align:center; padding:64px 20px;"><div style="font-size:42px; color:var(--gold); margin-bottom:14px;">✦</div><h3 style="margin-bottom:8px">${nome}</h3><p style="color:var(--muted); font-size:14px; max-width:380px; margin:0 auto;">Esta carteira faz parte do roteiro da JN Invest, mas ainda não foi montada no protótipo. Me peça pra construir em seguida.</p></div>`; }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="light">
+<html lang="pt-BR" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -194,6 +194,20 @@
   .lp-final h2{color:#fff; font-size:31px; font-weight:700; margin-bottom:10px;}
   .lp-final p{color:#cbd5e1; margin-bottom:26px;}
   .lp-footer{text-align:center; padding:30px; color:var(--faint); font-size:13px; border-top:1px solid var(--border);}
+  .lp-vs{display:grid; grid-template-columns:1fr 1fr; gap:18px; max-width:880px; margin:0 auto;}
+  @media(max-width:760px){.lp-vs{grid-template-columns:1fr;}}
+  .lp-vs-col{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px;}
+  .lp-vs-col.win{border:2px solid var(--gold);}
+  .lp-vs-col h3{font-size:18px; margin-bottom:18px; display:flex; align-items:center; gap:9px;}
+  .lp-vs-col ul{list-style:none;}
+  .lp-vs-col li{font-size:14.5px; padding:9px 0; display:flex; gap:10px; line-height:1.45; align-items:flex-start;}
+  .lp-vs-col.old li{color:var(--muted);}
+  .lp-vs-col li .x{color:var(--danger); font-weight:700; flex-shrink:0;}
+  .lp-vs-col li .c{color:var(--success); font-weight:700; flex-shrink:0;}
+  .lp-out{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; max-width:880px; margin:0 auto; text-align:center;}
+  @media(max-width:760px){.lp-out{grid-template-columns:1fr;}}
+  .lp-out .n{font-size:34px; font-weight:700; color:var(--gold);}
+  .lp-out .l{font-size:14px; color:var(--muted); margin-top:6px;}
 
   /* ---- AUTH (cadastro/login) ---- */
   .auth-wrap{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
@@ -223,33 +237,70 @@
 
   <section class="lp-hero">
     <div class="lp-hero-in">
-      <div class="lp-badge">Gestão patrimonial internacional</div>
-      <h1>Seu patrimônio, sob controle — em qualquer lugar do mundo.</h1>
-      <p>A plataforma do brasileiro que vive na Europa para acompanhar a B3, os investimentos no exterior e as criptos num só lugar — com a precisão de um private bank.</p>
+      <div class="lp-badge">O fim das planilhas de investimento</div>
+      <h1>Pare de controlar sua fortuna numa planilha do século passado.</h1>
+      <p>Veja <b style="color:#fff">todos os seus investimentos num só lugar</b> — B3, exterior e cripto — com cotações ao vivo e a análise pronta dos melhores ativos. Invista melhor, mais fácil e com a clareza que uma planilha velha nunca vai te dar.</p>
       <div class="lp-cta">
-        <button class="btn-primary" onclick="showSignup()">Criar conta grátis</button>
-        <button class="btn" onclick="showLogin()">Ver demonstração</button>
+        <button class="btn-primary" onclick="showSignup()">Quero começar agora — grátis</button>
+        <button class="btn" onclick="showLogin()">Ver por dentro</button>
       </div>
       <div class="lp-trust">B3 · Exterior · Cripto · Proventos · Imposto de renda</div>
     </div>
   </section>
 
-  <section class="lp-section" id="lp-recursos">
-    <h2>Tudo que você precisa para decidir com clareza</h2>
-    <p class="lp-sub">Da importação automática da B3 à análise fundamentalista — dados ao vivo, numa interface feita para investidores.</p>
+  <section class="lp-section">
+    <h2>Sua planilha está te custando dinheiro</h2>
+    <p class="lp-sub">Cada hora atualizando célula na mão é uma hora que você não passa investindo melhor. Compare:</p>
+    <div class="lp-vs">
+      <div class="lp-vs-col old">
+        <h3>📄 A planilha antiga</h3>
+        <ul>
+          <li><span class="x">✕</span> Você atualiza tudo na mão, toda semana</li>
+          <li><span class="x">✕</span> Cotações sempre desatualizadas</li>
+          <li><span class="x">✕</span> Uma fórmula errada e os números mentem</li>
+          <li><span class="x">✕</span> Não te diz quais ativos são bons</li>
+          <li><span class="x">✕</span> Trava e fica lenta com muitos dados</li>
+          <li><span class="x">✕</span> Não abre direito no celular</li>
+        </ul>
+      </div>
+      <div class="lp-vs-col win">
+        <h3>◆ A JN Invest</h3>
+        <ul>
+          <li><span class="c">✓</span> Importa a B3 e se monta sozinha</li>
+          <li><span class="c">✓</span> Cotações ao vivo, sempre certas</li>
+          <li><span class="c">✓</span> Cálculos exatos, sem erro de fórmula</li>
+          <li><span class="c">✓</span> Mostra P/VP, Dividend Yield e ROE na hora</li>
+          <li><span class="c">✓</span> Rápida com qualquer volume de ativos</li>
+          <li><span class="c">✓</span> Linda no computador e no celular</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-section" id="lp-recursos" style="padding-top:20px">
+    <h2>Tudo o que você precisa pra investir com confiança</h2>
+    <p class="lp-sub">Pare de adivinhar. Tenha dados de verdade, ao vivo, numa plataforma feita pra quem leva o próprio dinheiro a sério.</p>
     <div class="lp-features">
-      <div class="lp-feat"><div class="fi">◆</div><h3>Consolidação total</h3><p>B3, ações no exterior, REITs e criptomoedas reunidos num único painel de patrimônio.</p></div>
-      <div class="lp-feat"><div class="fi">⬆</div><h3>Importação automática</h3><p>Suba o extrato da B3 e a carteira se monta sozinha — preço médio e proventos calculados.</p></div>
-      <div class="lp-feat"><div class="fi">◷</div><h3>Análise fundamentalista</h3><p>P/VP, Dividend Yield, ROE, margens e mais — ao vivo, para escolher os melhores ativos.</p></div>
-      <div class="lp-feat"><div class="fi">❖</div><h3>Proventos & renda passiva</h3><p>Acompanhe dividendos e JCP mês a mês e projete sua renda passiva crescente.</p></div>
-      <div class="lp-feat"><div class="fi">↻</div><h3>Cotações ao vivo</h3><p>Preços, variação do dia e do mês atualizados em tempo real, do Brasil ao exterior.</p></div>
-      <div class="lp-feat"><div class="fi">▤</div><h3>Imposto de renda</h3><p>Day trade, swing trade e proventos já separados — pronto para a sua declaração.</p></div>
+      <div class="lp-feat"><div class="fi">◆</div><h3>Tudo num lugar só</h3><p>Chega de abrir cinco abas. B3, ações no exterior, REITs e criptos consolidados num único painel de patrimônio.</p></div>
+      <div class="lp-feat"><div class="fi">⬆</div><h3>Importou, pronto</h3><p>Suba o extrato da B3 e sua carteira se monta sozinha — preço médio e proventos calculados. Zero digitação.</p></div>
+      <div class="lp-feat"><div class="fi">◷</div><h3>Saiba o que comprar</h3><p>P/VP, Dividend Yield, ROE e margens ao vivo. Escolha os melhores ativos com dados — não no achismo.</p></div>
+      <div class="lp-feat"><div class="fi">❖</div><h3>Sua renda passiva crescendo</h3><p>Acompanhe seus dividendos mês a mês e veja, em números, sua liberdade financeira se aproximando.</p></div>
+      <div class="lp-feat"><div class="fi">↻</div><h3>Em tempo real</h3><p>Preços e variação se atualizam sozinhos. Você sempre sabe quanto tem — agora, não na semana passada.</p></div>
+      <div class="lp-feat"><div class="fi">▤</div><h3>Imposto sem dor de cabeça</h3><p>Day trade, swing trade e proventos já separados, prontos pra sua declaração. Adeus, planilha do IR.</p></div>
+    </div>
+  </section>
+
+  <section class="lp-section" style="padding-top:0">
+    <div class="lp-out">
+      <div><div class="n">3</div><div class="l">carteiras (Brasil, exterior, cripto) num painel</div></div>
+      <div><div class="n">0</div><div class="l">células pra atualizar na mão</div></div>
+      <div><div class="n">2 min</div><div class="l">pra ter tudo organizado e ao vivo</div></div>
     </div>
   </section>
 
   <section class="lp-section" id="lp-precos" style="padding-top:20px">
-    <h2>Planos simples</h2>
-    <p class="lp-sub">Comece de graça. Faça upgrade quando quiser o pacote completo.</p>
+    <h2>Comece de graça hoje</h2>
+    <p class="lp-sub">Sem cartão, sem compromisso. Faça upgrade só quando quiser o pacote completo.</p>
     <div class="lp-prices">
       <div class="lp-price">
         <div class="pname">Gratuito</div>
@@ -279,9 +330,9 @@
   </section>
 
   <section class="lp-final">
-    <h2>Comece a organizar seu patrimônio hoje</h2>
-    <p>Leva menos de 2 minutos para criar sua conta.</p>
-    <button class="btn-primary" style="width:auto;padding:0 32px;height:52px" onclick="showSignup()">Criar conta grátis</button>
+    <h2>Seus investimentos merecem mais que uma planilha.</h2>
+    <p>Leva 2 minutos pra criar sua conta. A versão mais organizada — e mais rica — do seu futuro agradece.</p>
+    <button class="btn-primary" style="width:auto;padding:0 34px;height:54px" onclick="showSignup()">Criar minha conta grátis</button>
   </section>
   <footer class="lp-footer">JN Invest · Gestão patrimonial para brasileiros na Europa · protótipo</footer>
 </div>
@@ -391,8 +442,8 @@ const ICON_MOON='<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7
 const ICON_SUN='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
 const ICON_REFRESH='<svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>';
 function applyTheme(t){ document.documentElement.setAttribute('data-theme',t); const b=document.getElementById('themeBtn'); if(b) b.innerHTML = t==='dark'?ICON_SUN:ICON_MOON; const rb=document.getElementById('refreshBtn'); if(rb && !rb.innerHTML) rb.innerHTML=ICON_REFRESH; }
-function toggleTheme(){ const cur=document.documentElement.getAttribute('data-theme')||'light'; const n=cur==='dark'?'light':'dark'; localStorage.setItem('jn_theme',n); applyTheme(n); }
-applyTheme(localStorage.getItem('jn_theme')||'light');
+function toggleTheme(){ const cur=document.documentElement.getAttribute('data-theme')||'dark'; const n=cur==='dark'?'light':'dark'; localStorage.setItem('jn_theme2',n); applyTheme(n); }
+applyTheme(localStorage.getItem('jn_theme2')||'dark');
 
 let ativos = JSON.parse(localStorage.getItem('investpro_ativos_v2') || 'null') || [];
 const save = () => localStorage.setItem('investpro_ativos_v2', JSON.stringify(ativos));

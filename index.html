@@ -219,6 +219,54 @@
   .auth-foot a{color:var(--gold); cursor:pointer; font-weight:600;}
   .auth-back{display:block; text-align:center; margin-top:14px; color:var(--faint); font-size:13px; cursor:pointer;}
   .auth-back:hover{color:var(--muted);}
+
+  /* ---- HAMBÚRGUER / GAVETA (mobile) ---- */
+  .hamb{display:none; align-items:center; justify-content:center; width:42px; height:42px; border-radius:11px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-size:20px; flex-shrink:0;}
+  .sb-backdrop{display:none;}
+
+  /* ---- MOBILE ---- */
+  @media(max-width:760px){
+    .hamb{display:flex;}
+    .sidebar{position:fixed; top:0; left:0; bottom:0; width:240px; transform:translateX(-100%); transition:transform .25s ease; z-index:60; box-shadow:0 0 40px rgba(0,0,0,.4);}
+    #app.sidebar-open .sidebar{transform:translateX(0);}
+    .sb-backdrop{position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:55;}
+    #app.sidebar-open .sb-backdrop{display:block;}
+    .main{padding:16px 14px;}
+    .topbar{margin-bottom:20px; gap:10px;}
+    .topbar h2{font-size:21px;}
+    .topright{gap:9px;}
+    .iconbtn{width:38px; height:38px;}
+    .avatar{width:38px; height:38px;}
+    .hero{padding:22px 18px;}
+    .hero .big{font-size:36px;}
+    .hero .meta{gap:14px;}
+    .cards{grid-template-columns:repeat(2,1fr); gap:10px;}
+    .card{padding:14px 15px;}
+    .card .val{font-size:22px;}
+    .row2{grid-template-columns:1fr;}
+    .panel{padding:16px; overflow-x:auto; -webkit-overflow-scrolling:touch;}
+    .panel table{min-width:540px;}
+    .formrow{grid-template-columns:1fr; gap:10px;}
+    .importbar{flex-direction:column; align-items:flex-start;}
+    .donut-wrap{flex-direction:column; align-items:center; gap:16px;}
+    /* landing */
+    .lp-nav{padding:13px 5%;}
+    .lp-links{gap:8px;}
+    .lp-links a{display:none;}
+    .lp-hero{padding:52px 6% 58px;}
+    .lp-hero h1{font-size:30px;}
+    .lp-hero p{font-size:16px;}
+    .lp-cta{flex-direction:column;}
+    .lp-cta .btn,.lp-cta .btn-primary{width:100%;}
+    .lp-section{padding:46px 6%;}
+    .lp-section h2{font-size:24px;}
+    .lp-sub{font-size:15px; margin-bottom:32px;}
+    .lp-features,.lp-vs,.lp-prices{grid-template-columns:1fr;}
+    .lp-out{grid-template-columns:1fr; gap:24px;}
+    .lp-final{padding:52px 6%;}
+    .lp-final h2{font-size:24px;}
+    .login-card{width:100%; max-width:380px; padding:32px 24px;}
+  }
 </style>
 </head>
 <body>
@@ -384,6 +432,7 @@
 
 <!-- ===== APP ===== -->
 <div id="app" class="hidden">
+  <div class="sb-backdrop" onclick="toggleSidebar()"></div>
   <aside class="sidebar">
     <div class="sb-brand">
       <div class="logo-badge" style="width:36px; height:36px; font-size:14px; border-radius:10px;">JN</div>
@@ -407,9 +456,12 @@
 
   <main class="main">
     <div class="topbar">
-      <div>
+      <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+        <button class="hamb" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+        <div style="min-width:0;">
         <h2 id="viewTitle">Dashboard</h2>
         <div class="sub" id="topsub">Bom te ver de volta</div>
+        </div>
       </div>
       <div class="topright">
         <button class="iconbtn" id="refreshBtn" onclick="atualizarCotacoes(false)" aria-label="Atualizar cotações" title="Atualizar cotações ao vivo"></button>
@@ -466,6 +518,7 @@ function showLogin(){ show('login'); }
 function showSignup(){ show('signup'); }
 function entrar(){ show('app'); applyTheme(document.documentElement.getAttribute('data-theme')); nav('dash'); renderSub(); if(ativos.length||cryptos.length||exterior.length) atualizarTudo(true); }
 function sair(){ show('landing'); }
+function toggleSidebar(){ document.getElementById('app').classList.toggle('sidebar-open'); }
 
 function renderSub(){
   const el=document.getElementById('topsub'); if(!el) return;
@@ -528,6 +581,7 @@ function nav(v){
   else if(v==='ext') c.innerHTML = viewExt();
   else if(v==='analise') c.innerHTML = viewAnalise();
   else c.innerHTML = emBreve(titulos[v]);
+  document.getElementById('app').classList.remove('sidebar-open');
 }
 
 function totais(){ let total=0, custo=0; const porClasse={}; ativos.forEach(a=>{ const pos=a.qtd*a.preco; total+=pos; custo+=a.qtd*a.pm; porClasse[a.classe]=(porClasse[a.classe]||0)+pos; }); return {total, custo, porClasse}; }

@@ -394,15 +394,15 @@
     </div>
     <h1>Criar sua conta</h1>
     <p class="sub">Comece a acompanhar seu patrimônio agora.</p>
-    <button class="btn-google" onclick="entrar()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continuar com Google</button>
+    <button class="btn-google" onclick="loginGoogle()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continuar com Google</button>
     <div class="auth-div">ou com e-mail</div>
     <label>Nome</label>
-    <input type="text" placeholder="Seu nome">
+    <input id="su_nome" type="text" placeholder="Seu nome">
     <label>E-mail</label>
-    <input type="email" placeholder="voce@email.com">
+    <input id="su_email" type="email" placeholder="voce@email.com">
     <label>Senha</label>
-    <input type="password" placeholder="Crie uma senha">
-    <button class="btn-primary" onclick="entrar()">Criar conta</button>
+    <input id="su_senha" type="password" placeholder="Crie uma senha">
+    <button class="btn-primary" onclick="cadastrar()">Criar conta</button>
     <p class="auth-foot">Já tem conta? <a onclick="showLogin()">Entrar</a></p>
     <a class="auth-back" onclick="showLanding()">← Voltar para o início</a>
   </div>
@@ -418,13 +418,13 @@
     </div>
     <h1>Acesse sua carteira</h1>
     <p class="sub">Gestão patrimonial para brasileiros na Europa.</p>
-    <button class="btn-google" onclick="entrar()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Entrar com Google</button>
+    <button class="btn-google" onclick="loginGoogle()"><svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Entrar com Google</button>
     <div class="auth-div">ou com e-mail</div>
     <label>E-mail</label>
-    <input id="email" type="email" value="cliente@jninvest.com">
+    <input id="li_email" type="email" placeholder="voce@email.com">
     <label>Senha</label>
-    <input id="senha" type="password" value="••••••">
-    <button class="btn-primary" onclick="entrar()">Entrar</button>
+    <input id="li_senha" type="password" placeholder="Sua senha">
+    <button class="btn-primary" onclick="logar()">Entrar</button>
     <p class="auth-foot">Não tem conta? <a onclick="showSignup()">Criar conta</a></p>
     <a class="auth-back" onclick="showLanding()">← Voltar para o início</a>
   </div>
@@ -474,6 +474,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const fmt = n => 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt0 = n => 'R$ ' + n.toLocaleString('pt-BR',{maximumFractionDigits:0});
@@ -497,17 +498,50 @@ function applyTheme(t){ document.documentElement.setAttribute('data-theme',t); c
 function toggleTheme(){ const cur=document.documentElement.getAttribute('data-theme')||'dark'; const n=cur==='dark'?'light':'dark'; localStorage.setItem('jn_theme2',n); applyTheme(n); }
 applyTheme(localStorage.getItem('jn_theme2')||'dark');
 
-let ativos = JSON.parse(localStorage.getItem('investpro_ativos_v2') || 'null') || [];
-const save = () => localStorage.setItem('investpro_ativos_v2', JSON.stringify(ativos));
-let proventos = JSON.parse(localStorage.getItem('investpro_prov_v2') || 'null') || [0,0,0,0,0,0,0,0,0,0,0,0];
-const saveProv = () => localStorage.setItem('investpro_prov_v2', JSON.stringify(proventos));
-let movimentacoes = JSON.parse(localStorage.getItem('aurum_mov') || 'null') || [];
-const saveMov = () => localStorage.setItem('aurum_mov', JSON.stringify(movimentacoes));
-let cryptos = JSON.parse(localStorage.getItem('aurum_cripto') || 'null') || [];
-const saveCripto = () => localStorage.setItem('aurum_cripto', JSON.stringify(cryptos));
-let exterior = JSON.parse(localStorage.getItem('aurum_ext') || 'null') || [];
-const saveExt = () => localStorage.setItem('aurum_ext', JSON.stringify(exterior));
-let fxUSD = parseFloat(localStorage.getItem('aurum_fx')) || 0;
+let ativos = [];
+let proventos = [0,0,0,0,0,0,0,0,0,0,0,0];
+let movimentacoes = [];
+let cryptos = [];
+let exterior = [];
+let fxUSD = 0;
+
+/* ===== Supabase (nuvem) ===== */
+const SUPABASE_URL = 'https://pskgdneioplfyxgtlpcn.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBza2dkbmVpb3BsZnl4Z3RscGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4ODg4NDIsImV4cCI6MjA5NzQ2NDg0Mn0.zmzZh3QG8NABvuzTGKtXy-H1w8T66jVUyzE3ogR6Vyk';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+let currentUser = null;
+
+const _iso = s => { if(!s) return null; const p=String(s).split('/'); return p.length===3 ? (p[2]+'-'+p[1].padStart(2,'0')+'-'+p[0].padStart(2,'0')) : (String(s).slice(0,10)||null); };
+const _br  = s => { if(!s) return ''; const p=String(s).slice(0,10).split('-'); return p.length===3 ? (p[2]+'/'+p[1]+'/'+p[0]) : String(s); };
+
+async function replaceTable(table, rows){
+  if(!currentUser) return;
+  const uid = currentUser.id;
+  await sb.from(table).delete().eq('user_id', uid);
+  if(rows.length) await sb.from(table).insert(rows.map(r=>({ ...r, user_id: uid })));
+}
+const save       = () => replaceTable('ativos',        ativos.map(a=>({ticker:a.ticker, classe:a.classe, qtd:a.qtd, pm:a.pm})));
+const saveExt    = () => replaceTable('exterior',      exterior.map(a=>({ticker:a.ticker, classe:a.classe, qtd:a.qtd, pm:a.pm})));
+const saveCripto = () => replaceTable('cryptos',       cryptos.map(c=>({coin_id:c.id, symbol:c.symbol, nome:c.nome, qtd:c.qtd, pm:c.pm})));
+const saveMov    = () => replaceTable('movimentacoes', movimentacoes.map(m=>({data:_iso(m.data), tipo:m.tipo, produto:m.produto, instituicao:m.inst, qtd:m.qtd, preco:m.preco, valor:m.valor, categoria:m.cat, destino:m.dest})));
+const saveProv   = () => replaceTable('proventos',     proventos.map((v,i)=>({ano:2026, mes:i+1, valor:v})).filter(x=>x.valor>0));
+
+async function carregarDados(){
+  if(!currentUser) return;
+  const uid = currentUser.id;
+  const [a,e,c,p,m] = await Promise.all([
+    sb.from('ativos').select('*').eq('user_id',uid),
+    sb.from('exterior').select('*').eq('user_id',uid),
+    sb.from('cryptos').select('*').eq('user_id',uid),
+    sb.from('proventos').select('*').eq('user_id',uid),
+    sb.from('movimentacoes').select('*').eq('user_id',uid)
+  ]);
+  ativos    = (a.data||[]).map(x=>({ticker:x.ticker, classe:x.classe, qtd:Number(x.qtd), pm:Number(x.pm), preco:Number(x.pm)}));
+  exterior  = (e.data||[]).map(x=>({ticker:x.ticker, classe:x.classe, qtd:Number(x.qtd), pm:Number(x.pm), preco:Number(x.pm)}));
+  cryptos   = (c.data||[]).map(x=>({id:x.coin_id, symbol:x.symbol, nome:x.nome, qtd:Number(x.qtd), pm:Number(x.pm), preco:Number(x.pm), var24:0}));
+  proventos = [0,0,0,0,0,0,0,0,0,0,0,0]; (p.data||[]).forEach(x=>{ if(x.mes>=1&&x.mes<=12) proventos[x.mes-1]=Number(x.valor); });
+  movimentacoes = (m.data||[]).map(x=>({es:'', data:_br(x.data), tipo:x.tipo, produto:x.produto||'', inst:x.instituicao||'', qtd:Number(x.qtd), preco:Number(x.preco), valor:Number(x.valor), cat:x.categoria, dest:x.destino}));
+}
 
 const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const coresClasse = {'Ações':'#0F172A','FIIs':'#1E3A8A','Renda Fixa':'#2563EB','Stocks':'#475569','REITs':'#64748B','Cripto':'#94A3B8','BDRs':'#334155','ETFs':'#3B82F6'};
@@ -516,9 +550,39 @@ function show(id){ ['landing','signup','login','app'].forEach(x=>document.getEle
 function showLanding(){ show('landing'); }
 function showLogin(){ show('login'); }
 function showSignup(){ show('signup'); }
-function entrar(){ show('app'); applyTheme(document.documentElement.getAttribute('data-theme')); nav('dash'); renderSub(); if(ativos.length||cryptos.length||exterior.length) atualizarTudo(true); }
-function sair(){ show('landing'); }
+async function iniciarSessao(user){
+  currentUser = user;
+  try{ await carregarDados(); }catch(e){ console.error('carregarDados', e); }
+  show('app'); applyTheme(document.documentElement.getAttribute('data-theme')); nav('dash'); renderSub();
+  if(ativos.length||cryptos.length||exterior.length) atualizarTudo(true);
+}
+async function cadastrar(){
+  const nome=(document.getElementById('su_nome').value||'').trim();
+  const email=(document.getElementById('su_email').value||'').trim();
+  const senha=document.getElementById('su_senha').value||'';
+  if(!email||!senha){ alert('Preencha e-mail e senha.'); return; }
+  const {data,error}=await sb.auth.signUp({email, password:senha, options:{data:{name:nome}}});
+  if(error){ alert('Não consegui criar a conta: '+error.message); return; }
+  if(data.session){ await iniciarSessao(data.user); }
+  else { alert('Conta criada! Confirme pelo link enviado no seu e-mail e depois faça login.'); showLogin(); }
+}
+async function logar(){
+  const email=(document.getElementById('li_email').value||'').trim();
+  const senha=document.getElementById('li_senha').value||'';
+  if(!email||!senha){ alert('Preencha e-mail e senha.'); return; }
+  const {data,error}=await sb.auth.signInWithPassword({email, password:senha});
+  if(error){ alert('Não consegui entrar: '+error.message); return; }
+  await iniciarSessao(data.user);
+}
+async function loginGoogle(){
+  const {error}=await sb.auth.signInWithOAuth({provider:'google', options:{redirectTo:location.origin}});
+  if(error){ alert('O login com Google ainda está sendo configurado. Use e-mail e senha por enquanto.'); }
+}
+async function sair(){ try{ await sb.auth.signOut(); }catch(e){} currentUser=null; ativos=[]; cryptos=[]; exterior=[]; movimentacoes=[]; proventos=[0,0,0,0,0,0,0,0,0,0,0,0]; show('landing'); }
 function toggleSidebar(){ document.getElementById('app').classList.toggle('sidebar-open'); }
+
+/* sessão persistente: se já está logado, entra direto */
+sb.auth.getSession().then(({data})=>{ if(data && data.session){ iniciarSessao(data.session.user); } });
 
 function renderSub(){
   const el=document.getElementById('topsub'); if(!el) return;
